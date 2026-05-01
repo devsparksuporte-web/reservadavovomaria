@@ -1,36 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { login } from '@/app/actions/auth';
 import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      
+      const result = await login(formData);
+      if (result?.error) {
+        setError(result.error);
+      }
     });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      setIsRedirecting(true);
-      router.push('/');
-      router.refresh();
-    }
   };
 
   return (
@@ -114,13 +107,13 @@ export default function LoginPage() {
           {/* Submit */}
           <button
             type="submit"
-            disabled={loading || isRedirecting}
+            disabled={isPending}
             className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-600/20 group"
           >
-            {loading || isRedirecting ? (
+            {isPending ? (
               <div className="flex items-center gap-2">
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>{isRedirecting ? 'Redirecionando...' : 'Carregando...'}</span>
+                <span>Entrando...</span>
               </div>
             ) : (
               <>
