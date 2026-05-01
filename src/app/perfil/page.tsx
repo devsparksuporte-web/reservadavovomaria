@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { UserCircle, PenSquare, Plus, Mail, Phone, FileText, BedDouble, Wallet, Star, Tag, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);

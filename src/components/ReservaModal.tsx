@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { X, Printer, CheckCircle2, Pencil, Plus, MessageCircle } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 
 interface ReservaModalProps {
   reserva?: any // Se passado, modo edição
