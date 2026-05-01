@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { UserCircle, PenSquare, Plus, Mail, Phone, FileText, BedDouble, Wallet, Star, Tag, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,6 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,7 +31,6 @@ export default function ProfilePage() {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setMessage(null);
 
     try {
       const { error } = await supabase.auth.updateUser({
@@ -42,10 +41,10 @@ export default function ProfilePage() {
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
+      toast.success('Perfil atualizado com sucesso!');
       setPassword(''); // Limpa a senha após atualizar
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message });
+      toast.error(error.message);
     } finally {
       setSaving(false);
     }
@@ -81,17 +80,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-
-      {message && (
-        <div className={cn(
-          "p-4 rounded-xl text-sm font-medium border",
-          message.type === 'success' 
-            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
-            : "bg-rose-500/10 border-rose-500/20 text-rose-400"
-        )}>
-          {message.text}
-        </div>
-      )}
 
       {/* Profile Form */}
       <div className="bg-[#1a1d27] border border-[#2a2d3a] rounded-2xl p-6">

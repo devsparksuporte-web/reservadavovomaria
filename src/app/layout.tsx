@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: "Sistema de gerenciamento de reservas da Pousada Vovó Maria",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,6 +22,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.className} flex h-screen overflow-hidden bg-zinc-50 dark:bg-[#0a0c10] transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <Toaster richColors position="top-right" />
           <AppLayout>
             {children}
           </AppLayout>

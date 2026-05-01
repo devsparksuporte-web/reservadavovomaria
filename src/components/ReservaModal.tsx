@@ -3,9 +3,36 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
-import { X, Printer, CheckCircle2, Pencil, Plus, MessageCircle } from "lucide-react"
+import { X, Printer, CheckCircle2, Pencil, Plus, MessageCircle, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { format } from "date-fns"
+import { format, isBefore, parseISO } from "date-fns"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { toast } from "sonner"
+
+const reservaSchema = z.object({
+  nomeHospede: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+  telefone: z.string().optional(),
+  cpf: z.string().optional(),
+  dataCheckin: z.string().min(1, "Data de check-in é obrigatória"),
+  dataCheckout: z.string().min(1, "Data de check-out é obrigatória"),
+  quartoId: z.string().min(1, "Selecione um quarto"),
+  numeroPessoas: z.number().min(1, "Mínimo de 1 pessoa"),
+  valorTotal: z.number().min(0, "Valor não pode ser negativo"),
+  formaPagamento: z.string().min(1, "Forma de pagamento é obrigatória"),
+  pagamentoStatus: z.string().min(1, "Status do pagamento é obrigatório"),
+}).refine((data) => {
+  if (data.dataCheckin && data.dataCheckout) {
+    return !isBefore(parseISO(data.dataCheckout), parseISO(data.dataCheckin))
+  }
+  return true
+}, {
+  message: "Check-out não pode ser antes do Check-in",
+  path: ["dataCheckout"],
+})
+
+type ReservaFormData = z.infer<typeof reservaSchema>
 
 interface ReservaModalProps {
   reserva?: any // Se passado, modo edição
@@ -22,64 +49,79 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showReceipt, setShowReceipt] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [serverError, setServerError] = useState<string | null>(null)
   const [createdReserva, setCreatedReserva] = useState<any>(null)
   const [quartos, setQuartos] = useState<any[]>([])
 
-  // Form states
-  const [nomeHospede, setNomeHospede] = useState("")
-  const [telefone, setTelefone] = useState("")
-  const [cpf, setCpf] = useState("")
-  const [dataCheckin, setDataCheckin] = useState("")
-  const [dataCheckout, setDataCheckout] = useState("")
-  const [quartoId, setQuartoId] = useState("")
-  const [numeroPessoas, setNumeroPessoas] = useState(1)
-  const [valorTotal, setValorTotal] = useState("")
-  const [formaPagamento, setFormaPagamento] = useState("Dinheiro")
-  const [pagamentoStatus, setPagamentoStatus] = useState("Pendente")
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<ReservaFormData>({
+    resolver: zodResolver(reservaSchema),
+    defaultValues: {
+      numeroPessoas: 1,
+      valorTotal: 0,
+      formaPagamento: "Dinheiro",
+      pagamentoStatus: "Pendente",
+    }
+  })
 
   useEffect(() => {
     if (isOpen) {
-      setError(null)
+      setServerError(null)
       carregarQuartos()
       if (reserva) {
-        setNomeHospede(reserva.hospedes?.nome || "")
-        setTelefone(reserva.hospedes?.telefone || "")
-        setCpf(reserva.hospedes?.cpf || "")
-        setDataCheckin(reserva.data_checkin)
-        setDataCheckout(reserva.data_checkout)
-        setQuartoId(reserva.quarto_id || "")
-        setNumeroPessoas(reserva.numero_pessoas)
-        setValorTotal(reserva.valor_total?.toString())
+        reset({
+          nomeHospede: reserva.hospedes?.nome || "",
+          telefone: reserva.hospedes?.telefone || "",
+          cpf: reserva.hospedes?.cpf || "",
+          dataCheckin: reserva.data_checkin,
+          dataCheckout: reserva.data_checkout,
+          quartoId: reserva.quarto_id || "",
+          numeroPessoas: reserva.numero_pessoas,
+          valorTotal: reserva.valor_total,
+          formaPagamento: reserva.pagamentos?.[0]?.forma_pagamento || "Dinheiro",
+          pagamentoStatus: reserva.pagamentos?.[0]?.status || "Pendente",
+        })
       } else if (initialData) {
-        if (initialData.data_checkin) setDataCheckin(initialData.data_checkin)
-        if (initialData.quarto_id) setQuartoId(initialData.quarto_id)
+        if (initialData.data_checkin) setValue("dataCheckin", initialData.data_checkin)
+        if (initialData.quarto_id) setValue("quartoId", initialData.quarto_id)
+      } else {
+        reset({
+          numeroPessoas: 1,
+          formaPagamento: "Dinheiro",
+          pagamentoStatus: "Pendente",
+        })
       }
     }
-  }, [isOpen, reserva, initialData])
+  }, [isOpen, reserva, initialData, reset, setValue])
 
   const carregarQuartos = async () => {
     const { data } = await supabase.from('quartos').select('*').order('numero')
     if (data) {
       setQuartos(data)
-      if (data.length > 0 && !quartoId && !reserva) {
-        setQuartoId(data[0].id)
+      if (data.length > 0 && !watch("quartoId") && !reserva) {
+        setValue("quartoId", data[0].id)
       }
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const onSubmit = async (data: ReservaFormData) => {
     setIsSubmitting(true)
+    setServerError(null)
 
     try {
       // 0. Verificar conflitos de datas (Overbooking)
       let conflictQuery = supabase
         .from('reservas')
         .select('id')
-        .eq('quarto_id', quartoId)
+        .eq('quarto_id', data.quartoId)
         .in('status', ['Reservado', 'Confirmado', 'Checked-in'])
-        .or(`and(data_checkin.lt.${dataCheckout},data_checkout.gt.${dataCheckin})`)
+        .or(`and(data_checkin.lt.${data.dataCheckout},data_checkout.gt.${data.dataCheckin})`)
 
       if (reserva) {
         conflictQuery = conflictQuery.neq('id', reserva.id)
@@ -89,7 +131,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       
       if (conflitosError) throw conflitosError
       if (conflitos && conflitos.length > 0) {
-        setError("Atenção: Este quarto já possui uma reserva ativa que entra em conflito com este período.")
+        setServerError("Atenção: Este quarto já possui uma reserva ativa que entra em conflito com este período.")
         setIsSubmitting(false)
         return
       }
@@ -100,24 +142,28 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       if (!reserva) {
         let existingHospedes = null;
         
-        if (cpf) {
-          const { data } = await supabase.from('hospedes').select('id').eq('cpf', cpf).limit(1)
-          existingHospedes = data
-        } else if (telefone) {
-          const { data } = await supabase.from('hospedes').select('id').eq('telefone', telefone).limit(1)
-          existingHospedes = data
+        if (data.cpf) {
+          const { data: cpfData } = await supabase.from('hospedes').select('id').eq('cpf', data.cpf).limit(1)
+          existingHospedes = cpfData
+        } else if (data.telefone) {
+          const { data: telData } = await supabase.from('hospedes').select('id').eq('telefone', data.telefone).limit(1)
+          existingHospedes = telData
         } else {
-          const { data } = await supabase.from('hospedes').select('id').eq('nome', nomeHospede).limit(1)
-          existingHospedes = data
+          const { data: nomeData } = await supabase.from('hospedes').select('id').eq('nome', data.nomeHospede).limit(1)
+          existingHospedes = nomeData
         }
 
         if (existingHospedes && existingHospedes.length > 0) {
           hospedeId = existingHospedes[0].id
-          await supabase.from('hospedes').update({ nome: nomeHospede, telefone, cpf: cpf || null }).eq('id', hospedeId)
+          await supabase.from('hospedes').update({ 
+            nome: data.nomeHospede, 
+            telefone: data.telefone, 
+            cpf: data.cpf || null 
+          }).eq('id', hospedeId)
         } else {
           const { data: newHospede, error: hospedeError } = await supabase
             .from('hospedes')
-            .insert([{ nome: nomeHospede, telefone, cpf: cpf || null }])
+            .insert([{ nome: data.nomeHospede, telefone: data.telefone, cpf: data.cpf || null }])
             .select()
           
           if (hospedeError) throw hospedeError
@@ -125,16 +171,19 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
         }
       } else {
         // Atualizar hóspede se necessário
-        await supabase.from('hospedes').update({ telefone, cpf: cpf || null }).eq('id', hospedeId)
+        await supabase.from('hospedes').update({ 
+          telefone: data.telefone, 
+          cpf: data.cpf || null 
+        }).eq('id', hospedeId)
       }
 
       const payload: any = {
         hospede_id: hospedeId,
-        quarto_id: quartoId, // Agora salvo diretamente na reserva
-        data_checkin: dataCheckin,
-        data_checkout: dataCheckout,
-        numero_pessoas: Number(numeroPessoas),
-        valor_total: parseFloat(valorTotal),
+        quarto_id: data.quartoId,
+        data_checkin: data.dataCheckin,
+        data_checkout: data.dataCheckout,
+        numero_pessoas: data.numeroPessoas,
+        valor_total: data.valorTotal,
         status: reserva?.status || 'Reservado',
       }
 
@@ -170,12 +219,14 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       if (!reserva) {
         await supabase.from('pagamentos').insert([{
           reserva_id,
-          valor: parseFloat(valorTotal),
-          forma_pagamento: formaPagamento,
-          status: pagamentoStatus,
-          data_pagamento: pagamentoStatus === 'Pago' ? new Date().toISOString() : new Date().toISOString()
+          valor: data.valorTotal,
+          forma_pagamento: data.formaPagamento,
+          status: data.pagamentoStatus,
+          data_pagamento: new Date().toISOString()
         }])
       }
+
+      toast.success(reserva ? "Reserva atualizada com sucesso!" : "Reserva criada com sucesso!")
 
       if (!reserva) {
         const { data: completeReserva } = await supabase
@@ -193,7 +244,8 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
         router.refresh()
       }
     } catch (err: any) {
-      setError("Erro ao processar reserva: " + err.message)
+      setServerError("Erro ao processar reserva: " + err.message)
+      toast.error("Ocorreu um erro ao salvar a reserva")
     } finally {
       setIsSubmitting(false)
     }
@@ -215,7 +267,6 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       `💰 *Total:* R$ ${createdReserva.valor_total?.toFixed(2)}%0A%0A` +
       `_Confirmação oficial de reserva na Pousada Vovó Maria. Apresente este código no check-in._`;
 
-    // Se um número específico foi passado, usa ele. Caso contrário, tenta o do hóspede.
     let finalPhone = targetPhone;
     
     if (!finalPhone) {
@@ -358,34 +409,50 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
             </div>
             
             <div className="flex-1 overflow-y-auto p-5 custom-scrollbar min-h-0">
-              {error && (
-                <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium animate-shake">
-                  {error}
+              {(serverError || Object.keys(errors).length > 0) && (
+                <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium animate-shake flex items-start gap-2">
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <div>
+                    {serverError && <p>{serverError}</p>}
+                    {Object.values(errors).map((error, index) => (
+                      <p key={index}>{error.message}</p>
+                    ))}
+                  </div>
                 </div>
               )}
-              <form onSubmit={handleSubmit} className="space-y-4">
+
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               
               <div className="space-y-4 border-b border-zinc-100 dark:border-[#2a2d3a] pb-4">
                 <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Dados do Hóspede</h4>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Nome Completo</label>
-                  <input required type="text" value={nomeHospede} onChange={(e) => setNomeHospede(e.target.value)}
+                  <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Nome Completo</label>
+                  <input 
+                    {...register("nomeHospede")}
                     disabled={!!reserva}
-                    className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50"
-                    placeholder="Nome do hóspede" />
+                    className={cn(
+                      "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 disabled:opacity-50 transition-all",
+                      errors.nomeHospede ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                    )}
+                    placeholder="Nome do hóspede" 
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Telefone</label>
-                    <input type="text" value={telefone} onChange={(e) => setTelefone(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                      placeholder="(11) 99999-9999" />
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Telefone</label>
+                    <input 
+                      {...register("telefone")}
+                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                      placeholder="(11) 99999-9999" 
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">CPF</label>
-                    <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                      placeholder="000.000.000-00" />
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">CPF</label>
+                    <input 
+                      {...register("cpf")}
+                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                      placeholder="000.000.000-00" 
+                    />
                   </div>
                 </div>
               </div>
@@ -394,22 +461,35 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                 <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Detalhes da Estadia</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Check-in</label>
-                    <input required type="date" value={dataCheckin} onChange={(e) => setDataCheckin(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" />
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Check-in</label>
+                    <input 
+                      type="date" 
+                      {...register("dataCheckin")}
+                      className={cn(
+                        "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 transition-all",
+                        errors.dataCheckin ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                      )}
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Check-out</label>
-                    <input required type="date" value={dataCheckout} onChange={(e) => setDataCheckout(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" />
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Check-out</label>
+                    <input 
+                      type="date" 
+                      {...register("dataCheckout")}
+                      className={cn(
+                        "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 transition-all",
+                        errors.dataCheckout ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                      )}
+                    />
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Quarto</label>
-                    <select required value={quartoId} onChange={(e) => setQuartoId(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Quarto</label>
+                    <select 
+                      {...register("quartoId")}
+                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
                     >
                       {quartos.length === 0 && <option value="">Carregando quartos...</option>}
                       {quartos.map(q => (
@@ -418,24 +498,35 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Nº de Pessoas</label>
-                    <input required type="number" min="1" value={numeroPessoas} onChange={(e) => setNumeroPessoas(Number(e.target.value))}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" />
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Nº de Pessoas</label>
+                    <input 
+                      type="number" 
+                      {...register("numeroPessoas", { valueAsNumber: true })}
+                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all" 
+                    />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Valor Total (R$)</label>
-                    <input required type="number" step="0.01" min="0" value={valorTotal} onChange={(e) => setValorTotal(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                      placeholder="Ex: 500.00" />
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Valor Total (R$)</label>
+                    <input 
+                      type="number" 
+                      step="0.01" 
+                      {...register("valorTotal", { valueAsNumber: true })}
+                      className={cn(
+                        "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 transition-all",
+                        errors.valorTotal ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                      )}
+                      placeholder="Ex: 500.00" 
+                    />
                   </div>
                   {!reserva && (
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Status Pgto</label>
-                      <select value={pagamentoStatus} onChange={(e) => setPagamentoStatus(e.target.value)}
-                        className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Status Pgto</label>
+                      <select 
+                        {...register("pagamentoStatus")}
+                        className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
                       >
                         <option value="Pendente">Pendente</option>
                         <option value="Pago">Pago (Total)</option>
@@ -446,9 +537,10 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
                 {!reserva && (
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider text-xs font-semibold">Forma de Pagamento</label>
-                    <select value={formaPagamento} onChange={(e) => setFormaPagamento(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Forma de Pagamento</label>
+                    <select 
+                      {...register("formaPagamento")}
+                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
                     >
                       <option value="Dinheiro">Dinheiro</option>
                       <option value="PIX">PIX</option>
@@ -461,12 +553,16 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
               </div>
 
               <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-zinc-100 dark:border-[#2a2d3a]">
-                <button type="button" onClick={() => setIsOpen(false)}
+                <button 
+                  type="button" 
+                  onClick={() => setIsOpen(false)}
                   className="rounded-xl border border-zinc-200 dark:border-[#2a2d3a] bg-white dark:bg-[#151821] px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#252836] transition-colors"
                 >
                   Cancelar
                 </button>
-                <button type="submit" disabled={isSubmitting || quartos.length === 0}
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || quartos.length === 0}
                   className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-lg shadow-emerald-600/20"
                 >
                   {isSubmitting ? "Processando..." : (reserva ? "Salvar Alterações" : "Confirmar Reserva")}
@@ -480,3 +576,4 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
     </>
   )
 }
+

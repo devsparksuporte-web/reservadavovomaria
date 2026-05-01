@@ -19,6 +19,9 @@ import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 import { ReservaModal } from "@/components/ReservaModal"
+import { Skeleton } from "@/components/Skeleton"
+import { Tooltip } from "@/components/Tooltip"
+import { toast } from "sonner"
 
 export default function Dashboard() {
   const [quartos, setQuartos] = useState<any[]>([])
@@ -151,39 +154,77 @@ export default function Dashboard() {
 
   const [recentActivities, setRecentActivities] = useState<any[]>([])
 
-  if (loading && stats.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-zinc-500 font-medium animate-pulse">Carregando informações...</p>
-        </div>
-      </div>
-    )
+  const handleQuickStatusUpdate = async (reservaId: string, newStatus: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      const { error } = await supabase
+        .from('reservas')
+        .update({ status: newStatus })
+        .eq('id', reservaId)
+      
+      if (error) throw error
+      toast.success(`Status atualizado para ${newStatus}`)
+      fetchDashboardData()
+    } catch (error: any) {
+      toast.error(`Erro ao atualizar: ${error.message}`)
+    }
   }
+
+  // Skeleton for Stats
+  const StatSkeleton = () => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="rounded-2xl bg-white dark:bg-[#1a1d27] p-5 border border-zinc-200 dark:border-[#2a2d3a]">
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-11 w-11 rounded-xl" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-6 w-16" />
+            </div>
+          </div>
+          <Skeleton className="h-3 w-24 mt-4" />
+        </div>
+      ))}
+    </div>
+  )
+
+  // Skeleton for Room Map
+  const RoomMapSkeleton = () => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+        <div key={i} className="rounded-xl border-2 border-zinc-100 dark:border-[#2a2d3a] flex flex-col items-center justify-center py-5 px-3 bg-white dark:bg-[#151821]">
+          <Skeleton className="h-5 w-8 mb-2" />
+          <Skeleton className="h-6 w-6 mb-2" />
+          <Skeleton className="h-3 w-12" />
+        </div>
+      ))}
+    </div>
+  )
 
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
-        {stats.map((stat) => (
-          <div key={stat.name} className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1d27] p-5 border border-zinc-200 dark:border-[#2a2d3a] transition-all hover:border-zinc-300 dark:hover:border-[#32364a] group">
-            <div className="flex items-center gap-4">
-              <div className={cn("p-3 rounded-xl border transition-all", stat.iconBg)}>
-                <stat.icon className={cn("h-5 w-5", stat.color)} />
+      {loading && stats.length === 0 ? <StatSkeleton /> : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
+          {stats.map((stat) => (
+            <div key={stat.name} className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1a1d27] p-5 border border-zinc-200 dark:border-[#2a2d3a] transition-all hover:border-zinc-300 dark:hover:border-[#32364a] group">
+              <div className="flex items-center gap-4">
+                <div className={cn("p-3 rounded-xl border transition-all", stat.iconBg)}>
+                  <stat.icon className={cn("h-5 w-5", stat.color)} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider truncate">{stat.name}</p>
+                  <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-0.5 tracking-tight">{stat.value}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider truncate">{stat.name}</p>
-                <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-0.5 tracking-tight">{stat.value}</p>
-              </div>
+              <p className="text-xs text-emerald-500 font-medium mt-3 flex items-center gap-1">
+                <ArrowUpRight className="h-3 w-3" />
+                {stat.sub}
+              </p>
             </div>
-            <p className="text-xs text-emerald-500 font-medium mt-3 flex items-center gap-1">
-              <ArrowUpRight className="h-3 w-3" />
-              {stat.sub}
-            </p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Room Map + Painel de Controle */}
@@ -211,40 +252,35 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {quartos.map(quarto => {
-                const reserva = reservasAtivas.find(r => r.quarto_id === quarto.id)
-                const isOcupado = reserva?.status === 'Checked-in'
-                const isReservado = reserva && (reserva.status === 'Confirmado' || reserva.status === 'Pendente' || reserva.status === 'Reservado')
-                const isLivre = !reserva
+            {loading && quartos.length === 0 ? <RoomMapSkeleton /> : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {quartos.map(quarto => {
+                  const reserva = reservasAtivas.find(r => r.quarto_id === quarto.id)
+                  const isOcupado = reserva?.status === 'Checked-in'
+                  const isReservado = reserva && (reserva.status === 'Confirmado' || reserva.status === 'Pendente' || reserva.status === 'Reservado')
+                  const isLivre = !reserva
 
-                let borderColor = "border-emerald-500/40"
-                let numberColor = "text-emerald-400"
-                let statusLabel = "LIVRE"
-                let statusLabelColor = "text-emerald-400"
-                let bgHover = "hover:bg-emerald-500/5"
+                  let borderColor = "border-emerald-500/40"
+                  let numberColor = "text-emerald-400"
+                  let statusLabel = "LIVRE"
+                  let statusLabelColor = "text-emerald-400"
+                  let bgHover = "hover:bg-emerald-500/5"
 
-                if (isOcupado) {
-                  borderColor = "border-red-500/40"
-                  numberColor = "text-red-400"
-                  statusLabel = "OCUPADO"
-                  statusLabelColor = "text-red-400"
-                  bgHover = "hover:bg-red-500/5"
-                } else if (isReservado) {
-                  borderColor = "border-blue-500/40"
-                  numberColor = "text-blue-400"
-                  statusLabel = "RESERVADO"
-                  statusLabelColor = "text-blue-400"
-                  bgHover = "hover:bg-blue-500/5"
-                }
-                
-                return (
-                  <ReservaModal 
-                    key={quarto.id}
-                    reserva={reserva}
-                    initialData={isLivre ? { quarto_id: quarto.id } : undefined}
-                    onRefresh={fetchDashboardData}
-                  >
+                  if (isOcupado) {
+                    borderColor = "border-red-500/40"
+                    numberColor = "text-red-400"
+                    statusLabel = "OCUPADO"
+                    statusLabelColor = "text-red-400"
+                    bgHover = "hover:bg-red-500/5"
+                  } else if (isReservado) {
+                    borderColor = "border-blue-500/40"
+                    numberColor = "text-blue-400"
+                    statusLabel = "RESERVADO"
+                    statusLabelColor = "text-blue-400"
+                    bgHover = "hover:bg-blue-500/5"
+                  }
+                  
+                  const content = (
                     <div 
                       className={cn(
                         "relative group rounded-xl border-2 flex flex-col items-center justify-center py-5 px-3 transition-all cursor-pointer",
@@ -261,15 +297,52 @@ export default function Dashboard() {
                         {quarto.tipo}
                       </span>
                       {!isLivre && (
-                        <span className={cn("text-[9px] font-bold uppercase tracking-wider mt-1", statusLabelColor)}>
-                          {statusLabel}
-                        </span>
+                        <div className="flex gap-2 mt-2">
+                          {(reserva.status === 'Confirmado' || reserva.status === 'Reservado' || reserva.status === 'Pendente') && (
+                            <button 
+                              onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Checked-in', e)}
+                              className="px-2 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-[8px] font-bold transition-colors"
+                            >
+                              CHECK-IN
+                            </button>
+                          )}
+                          {reserva.status === 'Checked-in' && (
+                            <button 
+                              onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Finalizado', e)}
+                              className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-[8px] font-bold transition-colors"
+                            >
+                              CHECK-OUT
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
-                  </ReservaModal>
-                )
-              })}
-            </div>
+                  )
+
+                  return (
+                    <ReservaModal 
+                      key={quarto.id}
+                      reserva={reserva}
+                      initialData={isLivre ? { quarto_id: quarto.id } : undefined}
+                      onRefresh={fetchDashboardData}
+                    >
+                      {!isLivre ? (
+                        <Tooltip 
+                          content={
+                            <div className="flex flex-col gap-1">
+                              <span className="font-bold">{reserva.hospedes?.nome || 'Hóspede'}</span>
+                              <span className="text-[10px] opacity-70">Saída: {format(new Date(reserva.data_checkout), "dd/MM")}</span>
+                            </div>
+                          }
+                        >
+                          {content}
+                        </Tooltip>
+                      ) : content}
+                    </ReservaModal>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
 

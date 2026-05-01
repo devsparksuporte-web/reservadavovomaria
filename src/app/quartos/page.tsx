@@ -5,27 +5,62 @@ import { CheckCircle2, Calendar, User, AlertTriangle, Trash2, Settings, Trending
 import { QuartoModal } from "@/components/QuartoModal"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/Skeleton"
+import { Tooltip } from "@/components/Tooltip"
+import { format } from "date-fns"
+import { toast } from "sonner"
 
 export default function QuartosPage() {
   const [quartos, setQuartos] = useState<any[]>([])
+  const [reservasAtivas, setReservasAtivas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchQuartos = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('quartos')
-      .select('*')
-      .order('numero', { ascending: true })
-    
-    if (!error) {
-      setQuartos(data || [])
+    try {
+      setLoading(true)
+      const { data: qData, error: qError } = await supabase
+        .from('quartos')
+        .select('*')
+        .order('numero', { ascending: true })
+      
+      if (qError) throw qError
+      setQuartos(qData || [])
+
+      const today = format(new Date(), 'yyyy-MM-dd')
+      const { data: rAtivas } = await supabase
+        .from('reservas')
+        .select('*, hospedes(nome)')
+        .lte('data_checkin', today)
+        .gt('data_checkout', today)
+        .neq('status', 'Cancelado')
+      
+      setReservasAtivas(rAtivas || [])
+    } catch (error) {
+      console.error('Erro ao carregar quartos:', error)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
     fetchQuartos()
   }, [])
+
+  const handleQuickStatusUpdate = async (reservaId: string, newStatus: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      const { error } = await supabase
+        .from('reservas')
+        .update({ status: newStatus })
+        .eq('id', reservaId)
+      
+      if (error) throw error
+      toast.success(`Status atualizado para ${newStatus}`)
+      fetchQuartos()
+    } catch (error: any) {
+      toast.error(`Erro ao atualizar: ${error.message}`)
+    }
+  }
 
   const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja excluir este quarto? Todas as referências em reservas serão afetadas.")) {
@@ -96,26 +131,82 @@ export default function QuartosPage() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {quartos.map((quarto) => (
-          <div
-            key={quarto.id}
-            className={cn("flex flex-col justify-between p-4 rounded-2xl bg-[#1a1d27] border transition-all duration-200 min-h-[120px]", getCardBorder(quarto.status))}
-          >
-            <div className="flex items-start justify-between">
-              <span className="font-bold text-white text-base">
-                {quarto.numero}
-              </span>
-              {getStatusIcon(quarto.status)}
+        {loading && quartos.length === 0 ? (
+          Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex flex-col justify-between p-4 rounded-2xl bg-[#1a1d27] border border-[#2a2d3a] min-h-[120px]">
+              <div className="flex items-start justify-between">
+                <Skeleton className="h-5 w-8" />
+                <Skeleton className="h-5 w-5 rounded-full" />
+              </div>
+              <div className="mt-4 space-y-2">
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-3 w-16" />
+              </div>
             </div>
-            
-            <div className="mt-4 flex flex-col gap-1">
-              <span className="text-xs text-zinc-400 font-medium truncate">{quarto.tipo}</span>
-              <span className={cn("text-[10px] font-bold uppercase tracking-wider", getStatusColorClass(quarto.status))}>
-                {quarto.status === 'Disponível' ? 'LIVRE' : quarto.status}
-              </span>
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          quartos.map((quarto) => {
+            const reserva = reservasAtivas.find(r => r.quarto_id === quarto.id)
+            const card = (
+              <div
+                key={quarto.id}
+                className={cn("flex flex-col justify-between p-4 rounded-2xl bg-[#1a1d27] border transition-all duration-200 min-h-[120px]", getCardBorder(quarto.status))}
+              >
+                <div className="flex items-start justify-between">
+                  <span className="font-bold text-white text-base">
+                    {quarto.numero}
+                  </span>
+                  {getStatusIcon(quarto.status)}
+                </div>
+                
+                <div className="mt-4 flex flex-col gap-1">
+                  <span className="text-xs text-zinc-400 font-medium truncate">{quarto.tipo}</span>
+                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", getStatusColorClass(quarto.status))}>
+                    {quarto.status === 'Disponível' ? 'LIVRE' : quarto.status}
+                  </span>
+                  {reserva && (
+                    <div className="flex gap-2 mt-2">
+                      {(reserva.status === 'Confirmado' || reserva.status === 'Reservado' || reserva.status === 'Pendente') && (
+                        <button 
+                          onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Checked-in', e)}
+                          className="px-2 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-[8px] font-bold transition-colors"
+                        >
+                          CHECK-IN
+                        </button>
+                      )}
+                      {reserva.status === 'Checked-in' && (
+                        <button 
+                          onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Finalizado', e)}
+                          className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-[8px] font-bold transition-colors"
+                        >
+                          CHECK-OUT
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+
+            if (reserva) {
+              return (
+                <Tooltip 
+                  key={quarto.id}
+                  content={
+                    <div className="flex flex-col gap-1">
+                      <span className="font-bold">{reserva.hospedes?.nome || 'Hóspede'}</span>
+                      <span className="text-[10px] opacity-70">Saída: {format(new Date(reserva.data_checkout), "dd/MM")}</span>
+                    </div>
+                  }
+                >
+                  {card}
+                </Tooltip>
+              )
+            }
+
+            return card
+          })
+        )}
       </div>
 
       {/* Promo Card & Stats with Dynamic Data */}
@@ -165,14 +256,7 @@ export default function QuartosPage() {
         </div>
       )}
 
-      {loading && (
-        <div className="text-center py-16">
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-5 w-5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm text-zinc-500">Carregando quartos...</p>
-          </div>
-        </div>
-      )}
+      {/* Loading state handled by skeletons above */}
     </div>
   )
 }
