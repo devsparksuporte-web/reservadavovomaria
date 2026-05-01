@@ -81,44 +81,44 @@ export function QuartoModal({ quarto, onRefresh }: QuartoModalProps) {
       <button
         onClick={() => setIsOpen(true)}
         className={quarto 
-          ? "p-2 text-zinc-500 hover:text-emerald-400 transition-colors rounded-lg hover:bg-[#151821]"
-          : "inline-flex items-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-colors"
+          ? "p-2 text-[#707070] hover:text-[#3ecf8e] transition-colors rounded-lg hover:bg-[#232323]"
+          : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md shadow-[#3ecf8e]/15 hover:bg-[#24b47e] transition-colors"
         }
       >
         {quarto ? <Pencil className="h-4 w-4" /> : <><Plus className="mr-2 h-4 w-4" /> Adicionar Quarto</>}
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex bg-black/70 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-md m-auto flex flex-col rounded-2xl bg-white dark:bg-[#1a1d27] shadow-2xl border border-zinc-200 dark:border-[#2a2d3a] animate-in fade-in zoom-in duration-200">
-            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-[#2a2d3a] p-5 shrink-0 rounded-t-2xl">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex bg-black/60 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-md m-auto flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 border border-[#2e2e2e] animate-fade-in-up">
+            <div className="flex items-center justify-between border-b border-[#2e2e2e] p-5 shrink-0">
+              <h3 className="text-base font-semibold text-[#ededed]">
                 {quarto ? `Editar Quarto ${quarto.numero}` : 'Novo Quarto'}
               </h3>
-              <button type="button" onClick={() => setIsOpen(false)} className="text-zinc-400 hover:text-zinc-300 p-1">
+              <button type="button" onClick={() => setIsOpen(false)} className="text-[#555555] hover:text-[#ededed] p-1 transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>
             
-            <div className="overflow-y-auto p-5 custom-scrollbar">
+            <div className="overflow-y-auto p-5">
               <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Número / Nome do Quarto</label>
+                <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider">Número / Nome do Quarto</label>
                 <input
                   required
                   type="text"
                   value={numero}
                   onChange={(e) => setNumero(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 dark:focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-500/20"
+                  className="mt-1.5 block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                   placeholder="Ex: 101 ou Chalé 1"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Tipo</label>
+                <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider">Tipo</label>
                 <select
                   value={tipo}
                   onChange={(e) => setTipo(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 dark:focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-500/20"
+                  className="mt-1.5 block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                 >
                   <option value="Suite">Suite</option>
                   <option value="Solteiro">Solteiro</option>
@@ -128,18 +128,18 @@ export function QuartoModal({ quarto, onRefresh }: QuartoModalProps) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Capacidade</label>
+                  <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider">Capacidade</label>
                   <input
                     required
                     type="number"
                     min="1"
                     value={capacidade}
                     onChange={(e) => setCapacidade(Number(e.target.value))}
-                    className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 dark:focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-500/20"
+                    className="mt-1.5 block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Preço Base (R$)</label>
+                  <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider">Preço Base (R$)</label>
                   <input
                     required
                     type="number"
@@ -147,22 +147,22 @@ export function QuartoModal({ quarto, onRefresh }: QuartoModalProps) {
                     min="0"
                     value={precoBase}
                     onChange={(e) => setPrecoBase(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 dark:focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-500/20"
+                    className="mt-1.5 block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                   />
                 </div>
               </div>
-              <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-zinc-100 dark:border-[#2a2d3a]">
+              <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-[#2e2e2e]">
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="rounded-xl border border-zinc-200 dark:border-[#2a2d3a] bg-white dark:bg-[#151821] px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#252836] transition-colors"
+                  className="rounded-md border border-[#2e2e2e] bg-[#232323] px-4 py-2.5 text-[13px] font-medium text-[#ededed] hover:bg-[#2e2e2e] transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-lg shadow-emerald-600/20"
+                  className="rounded-md bg-[#3ecf8e] px-5 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] disabled:opacity-50 transition-colors shadow-md shadow-[#3ecf8e]/15"
                 >
                   {isSubmitting ? "Salvando..." : "Salvar Alterações"}
                 </button>

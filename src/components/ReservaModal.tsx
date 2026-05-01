@@ -287,28 +287,28 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
   if (showReceipt && createdReserva) {
     return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-        <div id="receipt-print-area" className="w-full max-w-md flex flex-col rounded-2xl bg-white dark:bg-[#1a1d27] shadow-2xl max-h-[95vh] overflow-hidden border border-zinc-200 dark:border-[#2a2d3a] print:rounded-none">
-          <div className="bg-emerald-600 shrink-0 p-6 text-center text-white print:bg-transparent print:text-black print:border-b print-border-black print:p-2">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div id="receipt-print-area" className="w-full max-w-md flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 max-h-[95vh] overflow-hidden border border-[#2e2e2e] print:rounded-none">
+          <div className="bg-[#3ecf8e] shrink-0 p-6 text-center text-[#111111] print:bg-transparent print:text-black print:border-b print-border-black print:p-2">
             <CheckCircle2 className="mx-auto h-12 w-12 mb-2 print:hidden" />
             <h3 className="text-xl font-bold print-black print:text-lg">Reserva Confirmada!</h3>
-            <p className="text-emerald-100 print-black print:text-xs">Comprovante de Hospedagem</p>
+            <p className="text-[#111111]/70 print-black print:text-xs">Comprovante de Hospedagem</p>
           </div>
           
-          <div className="flex-1 overflow-y-auto min-h-0 p-8 space-y-6 print:p-2 print:space-y-4 bg-white dark:bg-zinc-900 print-no-bg">
-            <div className="flex justify-between items-start border-b border-dashed border-gray-200 dark:border-zinc-800 print-border-black pb-4 print:pb-2">
+          <div className="flex-1 overflow-y-auto min-h-0 p-8 space-y-6 print:p-2 print:space-y-4 bg-[#1c1c1c] print-no-bg">
+            <div className="flex justify-between items-start border-b border-dashed border-[#2e2e2e] print-border-black pb-4 print:pb-2">
               <div>
-                <p className="text-[10px] text-zinc-500 uppercase font-semibold tracking-wider print-black">Código da Reserva</p>
-                <p className="text-lg font-mono font-bold text-zinc-900 dark:text-white print-black print:text-sm">
+                <p className="text-[10px] text-[#707070] uppercase font-semibold tracking-wider print-black">Código da Reserva</p>
+                <p className="text-lg font-mono font-bold text-[#ededed] print-black print:text-sm">
                   {createdReserva.codigo || '#' + createdReserva.id.slice(0, 8).toUpperCase()}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] text-zinc-500 uppercase font-semibold tracking-wider print-black">Quarto</p>
-                <p className="text-lg font-bold text-emerald-500 print-black print:text-sm">
+                <p className="text-[10px] text-[#707070] uppercase font-semibold tracking-wider print-black">Quarto</p>
+                <p className="text-lg font-bold text-[#3ecf8e] print-black print:text-sm">
                    {createdReserva.quartos?.numero || reserva?.quartos?.numero || 'N/A'}
                 </p>
-                <p className="text-[10px] text-zinc-500 uppercase print-black">
+                <p className="text-[10px] text-[#707070] uppercase print-black">
                   {createdReserva.quartos?.tipo || reserva?.quartos?.tipo || ''}
                 </p>
               </div>
@@ -316,41 +316,41 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
             <div className="space-y-4 print:space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm text-zinc-500 print-black print:text-xs">Hóspede:</span>
-                <span className="text-sm font-semibold text-zinc-900 dark:text-white print-black print:text-xs">{createdReserva.hospedes?.nome || reserva?.hospedes?.nome}</span>
+                <span className="text-sm text-[#707070] print-black print:text-xs">Hóspede:</span>
+                <span className="text-sm font-semibold text-[#ededed] print-black print:text-xs">{createdReserva.hospedes?.nome || reserva?.hospedes?.nome}</span>
               </div>
               <div className="grid grid-cols-2 gap-4 print:gap-2">
                 <div>
-                  <span className="text-[10px] text-zinc-500 block uppercase tracking-wider print-black">Check-in:</span>
-                  <span className="text-sm font-semibold text-zinc-900 dark:text-white print-black print:text-xs">{new Date(createdReserva.data_checkin).toLocaleDateString('pt-BR')}</span>
+                  <span className="text-[10px] text-[#707070] block uppercase tracking-wider print-black">Check-in:</span>
+                  <span className="text-sm font-semibold text-[#ededed] print-black print:text-xs">{new Date(createdReserva.data_checkin).toLocaleDateString('pt-BR')}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-zinc-500 block uppercase tracking-wider print-black">Check-out:</span>
-                  <span className="text-sm font-semibold text-zinc-900 dark:text-white print-black print:text-xs">{new Date(createdReserva.data_checkout).toLocaleDateString('pt-BR')}</span>
+                  <span className="text-[10px] text-[#707070] block uppercase tracking-wider print-black">Check-out:</span>
+                  <span className="text-sm font-semibold text-[#ededed] print-black print:text-xs">{new Date(createdReserva.data_checkout).toLocaleDateString('pt-BR')}</span>
                 </div>
               </div>
-              <div className="flex justify-between border-t border-zinc-100 dark:border-[#2a2d3a] print-border-black pt-3 print:pt-2">
-                <span className="text-base font-bold text-zinc-900 dark:text-white print-black print:text-sm">Total:</span>
-                <span className="text-base font-bold text-emerald-500 print-black print:text-sm">R$ {createdReserva.valor_total?.toFixed(2)}</span>
+              <div className="flex justify-between border-t border-[#2e2e2e] print-border-black pt-3 print:pt-2">
+                <span className="text-base font-bold text-[#ededed] print-black print:text-sm">Total:</span>
+                <span className="text-base font-bold text-[#3ecf8e] print-black print:text-sm">R$ {createdReserva.valor_total?.toFixed(2)}</span>
               </div>
             </div>
 
-            <div className="bg-zinc-50 dark:bg-[#151821] print-no-bg p-3 print:p-0 rounded-xl print:rounded-none text-[10px] text-zinc-500 print-black leading-tight border border-zinc-100 dark:border-[#2a2d3a] print:border-none print:mt-4 print:text-center">
+            <div className="bg-[#232323] print-no-bg p-3 print:p-0 rounded-md print:rounded-none text-[10px] text-[#707070] print-black leading-tight border border-[#2e2e2e] print:border-none print:mt-4 print:text-center">
               <p>Confirmação oficial de reserva na Pousada Vovó Maria. Apresente este código no check-in.</p>
             </div>
           </div>
 
-          <div className="p-4 bg-zinc-50 dark:bg-[#151821] flex gap-2 border-t border-zinc-100 dark:border-[#2a2d3a] print:hidden">
-            <button onClick={handlePrint} className="flex-1 inline-flex justify-center items-center rounded-xl bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] px-3 py-2.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#252836] transition-all">
+          <div className="p-4 bg-[#232323] flex gap-2 border-t border-[#2e2e2e] print:hidden">
+            <button onClick={handlePrint} className="flex-1 inline-flex justify-center items-center rounded-md bg-[#1c1c1c] border border-[#2e2e2e] px-3 py-2.5 text-xs font-semibold text-[#ededed] hover:bg-[#2e2e2e] transition-all">
               <Printer className="mr-2 h-4 w-4" /> Imprimir
             </button>
-            <button onClick={() => handleWhatsApp()} className="flex-1 inline-flex justify-center items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3 py-2.5 text-xs font-semibold text-white transition-all" title="Enviar para o Hóspede">
+            <button onClick={() => handleWhatsApp()} className="flex-1 inline-flex justify-center items-center rounded-md bg-[#3ecf8e] hover:bg-[#24b47e] px-3 py-2.5 text-xs font-semibold text-[#111111] transition-all" title="Enviar para o Hóspede">
               <MessageCircle className="mr-1.5 h-3.5 w-3.5" /> Hóspede
             </button>
-            <button onClick={() => handleWhatsApp('5522997633952')} className="flex-1 inline-flex justify-center items-center rounded-xl bg-emerald-700 hover:bg-emerald-800 px-3 py-2.5 text-xs font-semibold text-white transition-all" title="Enviar para Vovó Maria">
+            <button onClick={() => handleWhatsApp('5522997633952')} className="flex-1 inline-flex justify-center items-center rounded-md bg-[#24b47e] hover:bg-[#1a9b6c] px-3 py-2.5 text-xs font-semibold text-[#111111] transition-all" title="Enviar para Vovó Maria">
               <MessageCircle className="mr-1.5 h-3.5 w-3.5" /> Vovó Maria
             </button>
-            <button onClick={() => { setShowReceipt(false); setIsOpen(false); router.refresh(); }} className="flex-1 inline-flex justify-center items-center rounded-xl bg-zinc-800 hover:bg-zinc-700 px-3 py-2.5 text-xs font-semibold text-white transition-all">
+            <button onClick={() => { setShowReceipt(false); setIsOpen(false); router.refresh(); }} className="flex-1 inline-flex justify-center items-center rounded-md bg-[#2e2e2e] hover:bg-[#444444] px-3 py-2.5 text-xs font-semibold text-[#ededed] transition-all">
               OK
             </button>
           </div>
@@ -373,7 +373,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                   setCreatedReserva(reserva)
                   setShowReceipt(true)
                 }}
-                className="text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors p-1"
+                className="text-[#555555] hover:text-[#3ecf8e] transition-colors p-1"
                 title="Ver Comprovante"
               >
                 <Printer className="h-4 w-4" />
@@ -385,8 +385,8 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                 setIsOpen(true)
               }}
               className={reserva
-                ? "text-zinc-500 hover:text-emerald-400 transition-colors p-1"
-                : "inline-flex items-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-colors"
+                ? "text-[#707070] hover:text-[#3ecf8e] transition-colors p-1"
+                : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md shadow-[#3ecf8e]/15 hover:bg-[#24b47e] transition-colors"
               }
               title={reserva ? "Editar Reserva" : "Nova Reserva"}
             >
@@ -397,13 +397,13 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex bg-black/70 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-lg m-auto flex flex-col rounded-2xl bg-white dark:bg-[#1a1d27] shadow-2xl border border-zinc-200 dark:border-[#2a2d3a]">
-            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-[#2a2d3a] p-5 shrink-0 rounded-t-2xl">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex bg-black/60 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-lg m-auto flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 border border-[#2e2e2e] animate-fade-in-up">
+            <div className="flex items-center justify-between border-b border-[#2e2e2e] p-5 shrink-0">
+              <h3 className="text-base font-semibold text-[#ededed]">
                 {reserva ? "Editar Reserva" : "Nova Reserva"}
               </h3>
-              <button type="button" onClick={() => setIsOpen(false)} className="text-zinc-400 hover:text-zinc-300 p-1">
+              <button type="button" onClick={() => setIsOpen(false)} className="text-[#555555] hover:text-[#ededed] p-1 transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -423,34 +423,34 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               
-              <div className="space-y-4 border-b border-zinc-100 dark:border-[#2a2d3a] pb-4">
-                <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Dados do Hóspede</h4>
+              <div className="space-y-4 border-b border-[#2e2e2e] pb-4">
+                <h4 className="text-[13px] font-semibold text-[#ededed]">Dados do Hóspede</h4>
                 <div>
-                  <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Nome Completo</label>
+                  <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Nome Completo</label>
                   <input 
                     {...register("nomeHospede")}
                     disabled={!!reserva}
                     className={cn(
-                      "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 disabled:opacity-50 transition-all",
-                      errors.nomeHospede ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                      "block w-full rounded-md border bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:outline-none focus:ring-1 disabled:opacity-50 transition-all",
+                      errors.nomeHospede ? "border-rose-500/50 focus:ring-rose-500/20" : "border-[#2e2e2e] focus:border-[#3ecf8e]/40 focus:ring-[#3ecf8e]/40"
                     )}
                     placeholder="Nome do hóspede" 
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Telefone</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Telefone</label>
                     <input 
                       {...register("telefone")}
-                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                      className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                       placeholder="(11) 99999-9999" 
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">CPF</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">CPF</label>
                     <input 
                       {...register("cpf")}
-                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                      className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                       placeholder="000.000.000-00" 
                     />
                   </div>
@@ -458,27 +458,27 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Detalhes da Estadia</h4>
+                <h4 className="text-[13px] font-semibold text-[#ededed]">Detalhes da Estadia</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Check-in</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Check-in</label>
                     <input 
                       type="date" 
                       {...register("dataCheckin")}
                       className={cn(
-                        "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 transition-all",
-                        errors.dataCheckin ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                        "block w-full rounded-md border bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:outline-none focus:ring-1 transition-all",
+                        errors.dataCheckin ? "border-rose-500/50 focus:ring-rose-500/20" : "border-[#2e2e2e] focus:border-[#3ecf8e]/40 focus:ring-[#3ecf8e]/40"
                       )}
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Check-out</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Check-out</label>
                     <input 
                       type="date" 
                       {...register("dataCheckout")}
                       className={cn(
-                        "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 transition-all",
-                        errors.dataCheckout ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                        "block w-full rounded-md border bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:outline-none focus:ring-1 transition-all",
+                        errors.dataCheckout ? "border-rose-500/50 focus:ring-rose-500/20" : "border-[#2e2e2e] focus:border-[#3ecf8e]/40 focus:ring-[#3ecf8e]/40"
                       )}
                     />
                   </div>
@@ -486,10 +486,10 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Quarto</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Quarto</label>
                     <select 
                       {...register("quartoId")}
-                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                      className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                     >
                       {quartos.length === 0 && <option value="">Carregando quartos...</option>}
                       {quartos.map(q => (
@@ -498,35 +498,35 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Nº de Pessoas</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Nº de Pessoas</label>
                     <input 
                       type="number" 
                       {...register("numeroPessoas", { valueAsNumber: true })}
-                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all" 
+                      className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all" 
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Valor Total (R$)</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Valor Total (R$)</label>
                     <input 
                       type="number" 
                       step="0.01" 
                       {...register("valorTotal", { valueAsNumber: true })}
                       className={cn(
-                        "block w-full rounded-md border bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 transition-all",
-                        errors.valorTotal ? "border-rose-500/50 focus:ring-rose-500/20" : "border-zinc-200 dark:border-[#2a2d3a] focus:border-emerald-500 focus:ring-emerald-500/20"
+                        "block w-full rounded-md border bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:outline-none focus:ring-1 transition-all",
+                        errors.valorTotal ? "border-rose-500/50 focus:ring-rose-500/20" : "border-[#2e2e2e] focus:border-[#3ecf8e]/40 focus:ring-[#3ecf8e]/40"
                       )}
                       placeholder="Ex: 500.00" 
                     />
                   </div>
                   {!reserva && (
                     <div>
-                      <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Status Pgto</label>
+                      <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Status Pgto</label>
                       <select 
                         {...register("pagamentoStatus")}
-                        className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                        className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                       >
                         <option value="Pendente">Pendente</option>
                         <option value="Pago">Pago (Total)</option>
@@ -537,10 +537,10 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
                 {!reserva && (
                   <div>
-                    <label className="block text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Forma de Pagamento</label>
+                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Forma de Pagamento</label>
                     <select 
                       {...register("formaPagamento")}
-                      className="block w-full rounded-md border border-zinc-200 dark:border-[#2a2d3a] bg-zinc-50 dark:bg-[#151821] px-3 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                      className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                     >
                       <option value="Dinheiro">Dinheiro</option>
                       <option value="PIX">PIX</option>
@@ -552,18 +552,18 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                 )}
               </div>
 
-              <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-zinc-100 dark:border-[#2a2d3a]">
+              <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-[#2e2e2e]">
                 <button 
                   type="button" 
                   onClick={() => setIsOpen(false)}
-                  className="rounded-xl border border-zinc-200 dark:border-[#2a2d3a] bg-white dark:bg-[#151821] px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#252836] transition-colors"
+                  className="rounded-md border border-[#2e2e2e] bg-[#232323] px-4 py-2.5 text-[13px] font-medium text-[#ededed] hover:bg-[#2e2e2e] transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
                   disabled={isSubmitting || quartos.length === 0}
-                  className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-lg shadow-emerald-600/20"
+                  className="rounded-md bg-[#3ecf8e] px-5 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] disabled:opacity-50 transition-colors shadow-md shadow-[#3ecf8e]/15"
                 >
                   {isSubmitting ? "Processando..." : (reserva ? "Salvar Alterações" : "Confirmar Reserva")}
                 </button>
