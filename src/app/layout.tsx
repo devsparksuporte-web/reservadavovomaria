@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.className} flex h-screen overflow-hidden bg-zinc-50 dark:bg-[#0a0c10] transition-colors duration-300`}>
+      <body className={`${inter.className} flex h-screen overflow-hidden bg-zinc-50 dark:bg-[#171717] transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Toaster richColors position="top-right" />
           <AppLayout>

@@ -1,32 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  /* === Brand Colors === */
-  --color-brand-50: #f0fdf4;
-  --color-brand-100: #dcfce7;
-  --color-brand-200: #bbf7d0;
-  --color-brand-300: #86efac;
-  --color-brand-400: #4ade80;
-  --color-brand-500: #10B981;
-  --color-brand-600: #059669;
-  --color-brand-700: #047857;
-  --color-brand-800: #065f46;
-  --color-brand-900: #064e3b;
+  /* === Supabase Brand Colors === */
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #3ecf8e;
+  --color-brand-500: #24b47e;
+  --color-brand-600: #1a9466;
+  --color-brand-700: #15794f;
+  --color-brand-800: #115e3e;
+  --color-brand-900: #0d4a30;
 
-  /* === Dark Surface Colors === */
-  --color-surface-900: #0a0c10;
-  --color-surface-800: #0f1117;
-  --color-surface-700: #151821;
-  --color-surface-600: #1a1d27;
-  --color-surface-500: #1e2130;
-  --color-surface-400: #252836;
-  --color-surface-300: #2a2d3a;
-  --color-surface-200: #32364a;
-  --color-surface-100: #3d4260;
+  /* === Supabase Dark Surface Colors === */
+  --color-surface-900: #111111;
+  --color-surface-800: #171717;
+  --color-surface-700: #1c1c1c;
+  --color-surface-600: #232323;
+  --color-surface-500: #2e2e2e;
+  --color-surface-400: #383838;
+  --color-surface-300: #444444;
+  --color-surface-200: #555555;
+  --color-surface-100: #707070;
 
   /* === Background/Foreground === */
-  --color-background: #0a0c10;
-  --color-foreground: #e4e4e7;
+  --color-background: #171717;
+  --color-foreground: #ededed;
 }
 
 @layer base {
@@ -36,8 +36,8 @@
   }
 
   .dark {
-    --background: #0a0c10;
-    --foreground: #e4e4e7;
+    --background: #171717;
+    --foreground: #ededed;
   }
 }
 
@@ -48,29 +48,36 @@ body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* === Custom Scrollbar === */
+/* === Supabase-style Scrollbar === */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2d3a;
+  background: #2e2e2e;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3d4260;
+  background: #444444;
+}
+
+/* === Selection Color === */
+::selection {
+  background-color: rgba(62, 207, 142, 0.25);
+  color: #ededed;
 }
 
 /* === Animations === */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -81,7 +88,7 @@ body {
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-12px);
+    transform: translateX(-10px);
   }
   to {
     opacity: 1;
@@ -91,23 +98,32 @@ body {
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    box-shadow: 0 0 0 0 rgba(62, 207, 142, 0.35);
   }
   50% {
-    box-shadow: 0 0 12px 4px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 16px 4px rgba(62, 207, 142, 0.12);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.45s ease-out forwards;
 }
 
 .animate-slide-in-left {
-  animation: slideInLeft 0.4s ease-out forwards;
+  animation: slideInLeft 0.35s ease-out forwards;
 }
 
 .animate-pulse-glow {
-  animation: pulseGlow 2s ease-in-out infinite;
+  animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
 /* === Utility: Stagger Children Animation === */
@@ -115,12 +131,12 @@ body {
   opacity: 0;
   animation: fadeInUp 0.4s ease-out forwards;
 }
-.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
-.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
-.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
-.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
-.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
-.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.24s; }
 
 /* === Print Styles for 80mm Thermal Printer === */
 @media print {

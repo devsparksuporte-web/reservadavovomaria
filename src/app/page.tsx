@@ -27,12 +27,12 @@ import { toast } from "sonner"
 const StatSkeleton = () => (
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
     {[1, 2, 3, 4].map((i) => (
-      <div key={i} className="rounded-2xl bg-white dark:bg-[#1a1d27] p-5 border border-zinc-200 dark:border-[#2a2d3a]">
+      <div key={i} className="rounded-lg bg-[#1c1c1c] p-5 border border-[#2e2e2e]">
         <div className="flex items-center gap-4">
-          <Skeleton className="h-11 w-11 rounded-xl" />
+          <Skeleton className="h-10 w-10 rounded-lg" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-5 w-16" />
           </div>
         </div>
         <Skeleton className="h-3 w-24 mt-4" />
@@ -45,7 +45,7 @@ const StatSkeleton = () => (
 const RoomMapSkeleton = () => (
   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-      <div key={i} className="rounded-xl border-2 border-zinc-100 dark:border-[#2a2d3a] flex flex-col items-center justify-center py-5 px-3 bg-white dark:bg-[#151821]">
+      <div key={i} className="rounded-lg border border-[#2e2e2e] flex flex-col items-center justify-center py-5 px-3 bg-[#1c1c1c]">
         <Skeleton className="h-5 w-8 mb-2" />
         <Skeleton className="h-6 w-6 mb-2" />
         <Skeleton className="h-3 w-12" />
@@ -145,8 +145,8 @@ export default function Dashboard() {
           value: `R$ ${realizada.toLocaleString('pt-BR')}`, 
           sub: 'Valor total processado',
           icon: Wallet, 
-          color: 'text-emerald-400',
-          iconBg: 'bg-emerald-500/10 border-emerald-500/20'
+          color: 'text-[#3ecf8e]',
+          iconBg: 'bg-[#3ecf8e]/10 border-[#3ecf8e]/20'
         },
         { 
           name: 'Reservas Hoje', 
@@ -202,23 +202,23 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="space-y-6 animate-fade-in-up" aria-label="Dashboard principal">
+    <main className="space-y-5 animate-fade-in-up" aria-label="Dashboard principal">
       {/* Stats Grid */}
       <section aria-label="Resumo Financeiro e Ocupação">
         {loading && stats.length === 0 ? <StatSkeleton /> : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
             {stats.map((stat) => (
-              <article key={stat.name} className="relative overflow-hidden rounded-2xl bg-white/80 dark:bg-[#1a1d27]/80 backdrop-blur-md p-5 border border-zinc-200/50 dark:border-[#2a2d3a]/50 transition-all hover:border-zinc-300 dark:hover:border-[#32364a] hover:shadow-sm group">
+              <article key={stat.name} className="relative overflow-hidden rounded-lg bg-[#1c1c1c] p-5 border border-[#2e2e2e] transition-all hover:border-[#444444] group">
                 <div className="flex items-center gap-4">
-                  <div className={cn("p-3 rounded-xl border transition-transform duration-300 group-hover:scale-105", stat.iconBg)}>
-                    <stat.icon className={cn("h-5 w-5", stat.color)} aria-hidden="true" />
+                  <div className={cn("p-2.5 rounded-lg border transition-transform duration-200 group-hover:scale-105", stat.iconBg)}>
+                    <stat.icon className={cn("h-4 w-4", stat.color)} aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate">{stat.name}</h3>
-                    <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-0.5 tracking-tight">{stat.value}</p>
+                    <h3 className="text-[11px] font-medium text-[#707070] uppercase tracking-wider truncate">{stat.name}</h3>
+                    <p className="text-xl font-semibold text-[#ededed] mt-0.5 tracking-tight">{stat.value}</p>
                   </div>
                 </div>
-                <p className="text-xs text-emerald-600 dark:text-emerald-500 font-medium mt-3 flex items-center gap-1">
+                <p className="text-[11px] text-[#3ecf8e] font-medium mt-3 flex items-center gap-1">
                   <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
                   {stat.sub}
                 </p>
@@ -228,52 +228,52 @@ export default function Dashboard() {
         )}
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Left Column: Room Map + Painel de Controle */}
-        <section className="lg:col-span-2 space-y-6" aria-labelledby="painel-controle-title">
+        <section className="lg:col-span-2 space-y-5" aria-labelledby="painel-controle-title">
           {/* Painel de Controle + Room Map */}
-          <div className="bg-white/80 dark:bg-[#1a1d27]/80 backdrop-blur-md rounded-2xl p-6 border border-zinc-200/50 dark:border-[#2a2d3a]/50 shadow-sm">
-            <header className="mb-6">
-              <h2 id="painel-controle-title" className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">Painel de Controle</h2>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">Resumo geral das operações da Pousada Vovó Maria.</p>
+          <div className="bg-[#1c1c1c] rounded-lg p-5 border border-[#2e2e2e]">
+            <header className="mb-5">
+              <h2 id="painel-controle-title" className="text-base font-semibold text-[#ededed] tracking-tight">Painel de Controle</h2>
+              <p className="text-[13px] text-[#707070] mt-0.5">Resumo geral das operações da Pousada Vovó Maria.</p>
             </header>
 
             {/* Mapa de Quartos */}
             <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <h3 className="text-base font-bold text-zinc-900 dark:text-white">Mapa de Quartos</h3>
-              <div className="flex items-center gap-4 text-xs font-medium text-zinc-600 dark:text-zinc-400" aria-label="Legenda do mapa de quartos">
+              <h3 className="text-[13px] font-semibold text-[#ededed]">Mapa de Quartos</h3>
+              <div className="flex items-center gap-4 text-[11px] font-medium text-[#707070]" aria-label="Legenda do mapa de quartos">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" aria-hidden="true"></span> LIVRE
+                  <span className="h-2 w-2 rounded-full bg-[#3ecf8e] shadow-[0_0_6px_rgba(62,207,142,0.5)]" aria-hidden="true"></span> Livre
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" aria-hidden="true"></span> RESERVADO
+                  <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.5)]" aria-hidden="true"></span> Reservado
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" aria-hidden="true"></span> OCUPADO
+                  <span className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]" aria-hidden="true"></span> Ocupado
                 </div>
               </div>
             </div>
 
             {loading && quartos.length === 0 ? <RoomMapSkeleton /> : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
                 {quartos.map(quarto => {
                   const reserva = reservasAtivas.find(r => r.quarto_id === quarto.id)
                   const isOcupado = reserva?.status === 'Checked-in'
                   const isReservado = reserva && (reserva.status === 'Confirmado' || reserva.status === 'Pendente' || reserva.status === 'Reservado')
                   const isLivre = !reserva
 
-                  let borderColor = "border-emerald-500/40"
-                  let numberColor = "text-emerald-400"
+                  let borderColor = "border-[#3ecf8e]/30"
+                  let numberColor = "text-[#3ecf8e]"
                   let statusLabel = "LIVRE"
-                  let bgHover = "hover:bg-emerald-500/5"
+                  let bgHover = "hover:bg-[#3ecf8e]/5"
 
                   if (isOcupado) {
-                    borderColor = "border-red-500/40"
+                    borderColor = "border-red-500/30"
                     numberColor = "text-red-400"
                     statusLabel = "OCUPADO"
                     bgHover = "hover:bg-red-500/5"
                   } else if (isReservado) {
-                    borderColor = "border-blue-500/40"
+                    borderColor = "border-blue-500/30"
                     numberColor = "text-blue-400"
                     statusLabel = "RESERVADO"
                     bgHover = "hover:bg-blue-500/5"
@@ -284,17 +284,17 @@ export default function Dashboard() {
                       type="button"
                       aria-label={`Quarto ${quarto.numero}, Tipo ${quarto.tipo}, Status ${statusLabel}`}
                       className={cn(
-                        "relative w-full group rounded-xl border-2 flex flex-col items-center justify-center py-5 px-3 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1a1d27]",
-                        "bg-white dark:bg-[#151821]",
+                        "relative w-full group rounded-lg border flex flex-col items-center justify-center py-4 px-3 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3ecf8e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c1c1c]",
+                        "bg-[#232323]",
                         borderColor,
                         bgHover
                       )}
                     >
-                      <span className={cn("text-lg font-bold", numberColor)}>
+                      <span className={cn("text-base font-semibold", numberColor)}>
                         {quarto.numero}
                       </span>
-                      <BedDouble className="h-6 w-6 text-zinc-600 dark:text-zinc-500 my-1.5 transition-transform group-hover:scale-110" aria-hidden="true" />
-                      <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                      <BedDouble className="h-5 w-5 text-[#555555] my-1 transition-transform group-hover:scale-110" aria-hidden="true" />
+                      <span className="text-[9px] font-medium text-[#707070] uppercase tracking-wider">
                         {quarto.tipo}
                       </span>
                       {!isLivre && (
@@ -303,7 +303,7 @@ export default function Dashboard() {
                             <button 
                               type="button"
                               onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Checked-in', e)}
-                              className="px-2 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-[8px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500"
+                              className="px-2 py-0.5 rounded bg-[#3ecf8e]/15 hover:bg-[#3ecf8e]/25 text-[#3ecf8e] text-[8px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#3ecf8e]"
                               aria-label={`Realizar check-in para reserva de ${reserva.hospedes?.nome}`}
                             >
                               CHECK-IN
@@ -313,7 +313,7 @@ export default function Dashboard() {
                             <button 
                               type="button"
                               onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Finalizado', e)}
-                              className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-600 dark:text-amber-400 text-[8px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
+                              className="px-2 py-0.5 rounded bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-[8px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
                               aria-label={`Realizar check-out para reserva de ${reserva.hospedes?.nome}`}
                             >
                               CHECK-OUT
@@ -335,7 +335,7 @@ export default function Dashboard() {
                         <Tooltip 
                           content={
                             <div className="flex flex-col gap-1">
-                              <span className="font-bold">{reserva.hospedes?.nome || 'Hóspede'}</span>
+                              <span className="font-semibold">{reserva.hospedes?.nome || 'Hóspede'}</span>
                               <span className="text-[10px] opacity-70">Saída: {format(new Date(reserva.data_checkout), "dd/MM")}</span>
                             </div>
                           }
@@ -352,15 +352,15 @@ export default function Dashboard() {
         </section>
 
         {/* Right Column: Quick Actions + Arrivals + Activity */}
-        <aside className="space-y-6" aria-label="Ações rápidas e informações secundárias">
+        <aside className="space-y-5" aria-label="Ações rápidas e informações secundárias">
           {/* Quick Actions */}
-          <div className="bg-white/80 dark:bg-[#1a1d27]/80 backdrop-blur-md rounded-2xl p-6 border border-zinc-200/50 dark:border-[#2a2d3a]/50 shadow-sm">
-            <h3 className="text-base font-bold text-zinc-900 dark:text-white mb-4">Ações Rápidas</h3>
-            <div className="space-y-3">
+          <div className="bg-[#1c1c1c] rounded-lg p-5 border border-[#2e2e2e]">
+            <h3 className="text-[13px] font-semibold text-[#ededed] mb-4">Ações Rápidas</h3>
+            <div className="space-y-2.5">
               <ReservaModal onRefresh={fetchDashboardData}>
                 <button 
                   type="button"
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold text-sm transition-all active:scale-[0.98] shadow-lg shadow-emerald-600/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1a1d27]"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#3ecf8e] hover:bg-[#24b47e] text-[#111111] rounded-lg font-semibold text-[13px] transition-all active:scale-[0.98] shadow-md shadow-[#3ecf8e]/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3ecf8e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c1c1c]"
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
                   Nova Reserva
@@ -368,7 +368,7 @@ export default function Dashboard() {
               </ReservaModal>
               <Link
                 href="/hospedes"
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-900 dark:bg-emerald-600/10 dark:hover:bg-emerald-600/20 dark:text-emerald-400 text-white rounded-xl font-semibold text-sm transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1a1d27]"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#232323] hover:bg-[#2e2e2e] text-[#ededed] rounded-lg font-medium text-[13px] transition-all active:scale-[0.98] border border-[#2e2e2e] hover:border-[#444444] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3ecf8e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c1c1c]"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 Novo Hóspede
@@ -377,57 +377,57 @@ export default function Dashboard() {
           </div>
 
           {/* Chegadas */}
-          <div className="bg-white/80 dark:bg-[#1a1d27]/80 backdrop-blur-md rounded-2xl p-6 border border-zinc-200/50 dark:border-[#2a2d3a]/50 shadow-sm">
-            <h3 className="text-base font-bold text-zinc-900 dark:text-white mb-4">Próximas Chegadas</h3>
-            <ul className="space-y-4" role="list">
+          <div className="bg-[#1c1c1c] rounded-lg p-5 border border-[#2e2e2e]">
+            <h3 className="text-[13px] font-semibold text-[#ededed] mb-4">Próximas Chegadas</h3>
+            <ul className="space-y-3" role="list">
               {proximasChegadas.length > 0 ? proximasChegadas.slice(0, 3).map((reserva) => (
                 <li key={reserva.id} className="flex items-center gap-3 group">
-                  <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-[#252836] flex items-center justify-center text-sm font-bold text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-[#2a2d3a] shrink-0" aria-hidden="true">
+                  <div className="h-8 w-8 rounded-md bg-[#232323] flex items-center justify-center text-[12px] font-semibold text-[#707070] border border-[#2e2e2e] shrink-0" aria-hidden="true">
                     {reserva.hospedes?.nome?.[0] || '?'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-zinc-900 dark:text-white truncate" title={reserva.hospedes?.nome}>
+                    <p className="text-[13px] font-medium text-[#ededed] truncate" title={reserva.hospedes?.nome}>
                       {reserva.hospedes?.nome}
                     </p>
-                    <p className="text-[11px] font-medium text-zinc-600 dark:text-zinc-400">
+                    <p className="text-[11px] text-[#555555]">
                       {reserva.quartos?.numero ? `${reserva.quartos.numero} ${reserva.quartos.tipo?.toUpperCase()}` : ''} · {format(new Date(reserva.data_checkin), "dd 'de' MMMM", { locale: ptBR })}
                     </p>
                   </div>
-                  <span className="inline-flex items-center justify-center rounded-lg bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider border border-emerald-500/20 shrink-0">
+                  <span className="inline-flex items-center justify-center rounded-md bg-[#3ecf8e]/10 px-2 py-0.5 text-[10px] font-semibold text-[#3ecf8e] uppercase tracking-wider border border-[#3ecf8e]/20 shrink-0">
                     {reserva.status}
                   </span>
                 </li>
               )) : (
-                <li className="py-8 text-center">
-                  <p className="text-sm text-zinc-500 italic">Nenhuma chegada prevista</p>
+                <li className="py-6 text-center">
+                  <p className="text-[13px] text-[#555555] italic">Nenhuma chegada prevista</p>
                 </li>
               )}
             </ul>
             <Link 
               href="/reservas"
-              className="w-full mt-4 py-2.5 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors border-t border-zinc-200 dark:border-[#2a2d3a] pt-4 block text-center uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-b-xl"
+              className="w-full mt-4 py-2 text-[11px] font-semibold text-[#707070] hover:text-[#3ecf8e] transition-colors border-t border-[#2e2e2e] pt-3 block text-center uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3ecf8e] rounded-b-lg"
             >
               Ver agenda completa
             </Link>
           </div>
 
           {/* Atividade */}
-          <div className="bg-white/80 dark:bg-[#1a1d27]/80 backdrop-blur-md rounded-2xl p-6 border border-zinc-200/50 dark:border-[#2a2d3a]/50 shadow-sm">
-            <h3 className="text-base font-bold text-zinc-900 dark:text-white mb-4">Atividade Recente</h3>
-            <ul className="space-y-4" role="list">
+          <div className="bg-[#1c1c1c] rounded-lg p-5 border border-[#2e2e2e]">
+            <h3 className="text-[13px] font-semibold text-[#ededed] mb-4">Atividade Recente</h3>
+            <ul className="space-y-3" role="list">
               {recentActivities.length > 0 ? recentActivities.map((item, i) => (
                 <li key={i} className="flex gap-3 items-start">
-                  <div className={cn("p-2 rounded-lg shrink-0", item.bg)} aria-hidden="true">
-                    <item.icon className={cn("h-4 w-4", item.color)} />
+                  <div className={cn("p-1.5 rounded-md shrink-0", item.bg)} aria-hidden="true">
+                    <item.icon className={cn("h-3.5 w-3.5", item.color)} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 leading-snug">{item.text}</p>
-                    <p className="text-[10px] text-zinc-500 mt-0.5 uppercase font-semibold tracking-wider">{item.time}</p>
+                    <p className="text-[13px] font-medium text-[#ededed] leading-snug">{item.text}</p>
+                    <p className="text-[10px] text-[#555555] mt-0.5 font-medium">{item.time}</p>
                   </div>
                 </li>
               )) : (
                 <li className="py-4 text-center">
-                  <p className="text-xs text-zinc-500 italic">Sem atividades recentes</p>
+                  <p className="text-[13px] text-[#555555] italic">Sem atividades recentes</p>
                 </li>
               )}
             </ul>
