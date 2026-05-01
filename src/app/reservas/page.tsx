@@ -21,7 +21,8 @@ export default function ReservasPage() {
       .select(`
         *,
         hospedes (nome, telefone),
-        quartos (numero, tipo)
+        quartos (numero, tipo),
+        pagamentos (status, forma_pagamento)
       `)
       .order('data_checkin', { ascending: true })
 

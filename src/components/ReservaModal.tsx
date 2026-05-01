@@ -229,15 +229,46 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       if (!dataReserva || dataReserva.length === 0) throw new Error("Erro ao salvar reserva: Nenhum dado retornado")
       const reserva_id = dataReserva[0].id
 
-      // Criar registro de pagamento inicial
-      if (!reserva) {
-        await supabase.from('pagamentos').insert([{
-          reserva_id,
-          valor: data.valorTotal,
-          forma_pagamento: data.formaPagamento,
-          status: data.pagamentoStatus,
-          data_pagamento: new Date().toISOString()
-        }])
+      // 3. Gerenciar Registro de Pagamento
+      const paymentPayload = {
+        reserva_id,
+        valor: data.valorTotal,
+        forma_pagamento: data.formaPagamento,
+        status: data.pagamentoStatus,
+      }
+
+      // Tentar encontrar pagamento existente para esta reserva
+      const { data: existingPayment } = await supabase
+        .from('pagamentos')
+        .select('id')
+        .eq('reserva_id', reserva_id)
+        .maybeSingle()
+
+      if (existingPayment) {
+        // Atualiza pagamento existente
+        const { error: paymentError } = await supabase
+          .from('pagamentos')
+          .update(paymentPayload)
+          .eq('id', existingPayment.id)
+        
+        if (paymentError) {
+          console.error("Erro ao atualizar pagamento:", paymentError)
+          // Não travamos o processo total se for apenas o financeiro, mas avisamos
+          toast.error("Reserva salva, mas houve um erro ao atualizar o financeiro.")
+        }
+      } else {
+        // Cria novo pagamento (para novas reservas ou reservas antigas sem registro)
+        const { error: paymentError } = await supabase
+          .from('pagamentos')
+          .insert([{
+            ...paymentPayload,
+            data_pagamento: new Date().toISOString()
+          }])
+        
+        if (paymentError) {
+          console.error("Erro ao criar pagamento:", paymentError)
+          toast.error("Reserva salva, mas houve um erro ao criar o registro financeiro.")
+        }
       }
 
       toast.success(reserva ? "Reserva atualizada com sucesso!" : "Reserva criada com sucesso!")
@@ -547,8 +578,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                       placeholder="Ex: 500.00" 
                     />
                   </div>
-                  {!reserva && (
-                    <div>
+                  <div>
                       <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Status Pgto</label>
                       <select 
                         {...register("pagamentoStatus")}
@@ -558,24 +588,21 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                         <option value="Pago">Pago (Total)</option>
                       </select>
                     </div>
-                  )}
                 </div>
 
-                {!reserva && (
-                  <div>
-                    <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Forma de Pagamento</label>
-                    <select 
-                      {...register("formaPagamento")}
-                      className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
-                    >
-                      <option value="Dinheiro">Dinheiro</option>
-                      <option value="PIX">PIX</option>
-                      <option value="Cartão de Crédito">Cartão de Crédito</option>
-                      <option value="Cartão de Débito">Cartão de Débito</option>
-                      <option value="Transferência">Transferência</option>
-                    </select>
-                  </div>
-                )}
+                <div>
+                  <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Forma de Pagamento</label>
+                  <select 
+                    {...register("formaPagamento")}
+                    className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
+                  >
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="PIX">PIX</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Transferência">Transferência</option>
+                  </select>
+                </div>
               </div>
 
               <div className="mt-6 flex justify-end space-x-3 pt-4 border-t border-[#2e2e2e]">

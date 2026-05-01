@@ -101,11 +101,19 @@ export default function FinanceiroPage() {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div>
-        <h2 className="text-xl font-semibold text-[#ededed] tracking-tight">Financeiro</h2>
-        <p className="mt-1 text-[13px] text-[#707070]">
-          Acompanhamento de receitas e pendências de pagamentos.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-[#ededed] tracking-tight">Financeiro</h2>
+          <p className="mt-1 text-[13px] text-[#707070]">
+            Acompanhamento de receitas e pendências de pagamentos.
+          </p>
+        </div>
+        <button 
+          onClick={() => fetchData()}
+          className="inline-flex items-center rounded-lg bg-[#232323] border border-[#2e2e2e] px-4 py-2 text-[13px] font-semibold text-[#ededed] hover:bg-[#2e2e2e] transition-colors"
+        >
+          Atualizar
+        </button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 stagger-children">
