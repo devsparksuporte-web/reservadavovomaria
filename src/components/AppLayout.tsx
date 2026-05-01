@@ -28,7 +28,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex flex-1 overflow-hidden w-full bg-zinc-50 dark:bg-[#0a0c10] transition-colors">
+    <div className="flex flex-1 overflow-hidden w-full bg-zinc-50 dark:bg-[#171717] transition-colors">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden relative">
         <Header />

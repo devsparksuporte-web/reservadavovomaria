@@ -97,7 +97,7 @@ export function Header() {
 
         {/* Search Results Dropdown */}
         {showResults && (searchQuery.length >= 2) && (
-          <div className="absolute top-full mt-2 left-0 w-80 bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg shadow-2xl shadow-black/40 overflow-hidden z-50 animate-fade-in-up">
+          <div className="absolute top-full mt-2 left-0 w-80 bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg shadow-xl overflow-hidden z-50 animate-fade-in-up">
             <div className="p-2 space-y-3">
               {/* Guests Section */}
               <div>

@@ -84,8 +84,8 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex bg-black/30 p-4 sm:p-6 backdrop-blur-md overflow-y-auto">
-          <div className="w-full max-w-md m-auto flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 border border-[#2e2e2e] animate-fade-in-up">
+        <div className="fixed inset-0 z-50 flex bg-black/30 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-lg m-auto flex flex-col rounded-lg bg-[#1c1c1c] border border-[#2e2e2e] animate-fade-in-up">
             <div className="flex items-center justify-between border-b border-[#2e2e2e] p-5 shrink-0">
               <h3 className="text-base font-semibold text-[#ededed]">
                 {hospede ? "Editar Hóspede" : "Novo Hóspede"}
@@ -95,7 +95,7 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-5 min-h-0">
+            <div className="flex-1 overflow-y-auto p-5 custom-scrollbar min-h-0">
               <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-4">
                 <div>

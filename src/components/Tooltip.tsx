@@ -20,12 +20,12 @@ export function Tooltip({ content, children, className }: TooltipProps) {
       {isVisible && (
         <div className={cn(
           "absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50",
-          "px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800",
+          "px-3 py-1.5 rounded-lg bg-[#1c1c1c] border border-[#2e2e2e]",
           "text-xs text-white whitespace-nowrap shadow-xl animate-in fade-in zoom-in duration-200",
           className
         )}>
           {content}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-zinc-900" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[#1c1c1c]" />
         </div>
       )}
     </div>

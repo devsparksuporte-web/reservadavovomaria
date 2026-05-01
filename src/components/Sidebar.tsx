@@ -24,7 +24,7 @@ export function Sidebar() {
   }
 
   return (
-    <div className="hidden md:flex h-full w-64 flex-col bg-[#1c1c1c] border-r border-[#2e2e2e] transition-all duration-300">
+    <div className="hidden md:flex h-full w-64 flex-col bg-[#171717] border-r border-[#2e2e2e]/50 transition-all duration-300">
       {/* Logo */}
       <div className="flex h-16 items-center px-5 border-b border-[#2e2e2e]">
         <div className="flex items-center gap-3 group cursor-pointer">
