@@ -71,7 +71,7 @@ export function Header() {
             <p className="text-xs font-semibold text-zinc-200 leading-tight">
               {user?.user_metadata?.full_name || 'Administrator'}
             </p>
-            <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Pousada Veral</p>
+            <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Pousada Vovó Maria</p>
           </div>
         </div>
       </div>

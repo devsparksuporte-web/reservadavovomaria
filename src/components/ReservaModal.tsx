@@ -20,9 +20,8 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showReceipt, setShowReceipt] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [createdReserva, setCreatedReserva] = useState<any>(null)
-
-  // Dados para seleção
   const [quartos, setQuartos] = useState<any[]>([])
 
   // Form states
@@ -39,6 +38,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
   useEffect(() => {
     if (isOpen) {
+      setError(null)
       carregarQuartos()
       if (reserva) {
         setNomeHospede(reserva.hospedes?.nome || "")
@@ -87,7 +87,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       
       if (conflitosError) throw conflitosError
       if (conflitos && conflitos.length > 0) {
-        alert("Atenção: Este quarto já possui uma reserva ativa que entra em conflito com este período.")
+        setError("Atenção: Este quarto já possui uma reserva ativa que entra em conflito com este período.")
         setIsSubmitting(false)
         return
       }
@@ -191,7 +191,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
         router.refresh()
       }
     } catch (err: any) {
-      alert("Erro ao processar reserva: " + err.message)
+      setError("Erro ao processar reserva: " + err.message)
     } finally {
       setIsSubmitting(false)
     }
@@ -356,6 +356,11 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
             </div>
             
             <div className="flex-1 overflow-y-auto p-5 custom-scrollbar min-h-0">
+              {error && (
+                <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium animate-shake">
+                  {error}
+                </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4">
               
               <div className="space-y-4 border-b border-zinc-100 dark:border-[#2a2d3a] pb-4">

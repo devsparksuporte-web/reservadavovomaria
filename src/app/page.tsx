@@ -82,6 +82,21 @@ export default function Dashboard() {
       
       if (rhError) throw rhError
 
+      // Atividades Recentes (Últimas Reservas)
+      const { data: rRecentes } = await supabase
+        .from('reservas')
+        .select('*, hospedes(nome)')
+        .order('created_at', { ascending: false })
+        .limit(3)
+      
+      const activities = rRecentes?.map(r => ({
+        text: `Nova reserva: ${r.hospedes?.nome || 'Hóspede'}`,
+        time: format(new Date(r.created_at), "HH:mm", { locale: ptBR }),
+        icon: PlusCircle,
+        color: 'text-blue-400',
+        bg: 'bg-blue-500/10'
+      })) || []
+
       const occupiedCount = rAtivas?.filter(r => r.status === 'Checked-in').length || 0
       const reservedTodayCount = rHoje?.length || 0
       const pendingCount = rHoje?.filter(r => r.status === 'Pendente' || r.status === 'Reservado').length || 0
@@ -94,7 +109,7 @@ export default function Dashboard() {
         { 
           name: 'Receita Realizada', 
           value: `R$ ${realizada.toLocaleString('pt-BR')}`, 
-          sub: '+5% esta semana',
+          sub: 'Valor total processado',
           icon: Wallet, 
           color: 'text-emerald-400',
           iconBg: 'bg-emerald-500/10 border-emerald-500/20'
@@ -110,7 +125,7 @@ export default function Dashboard() {
         { 
           name: 'Quartos Ocupados', 
           value: `${occupiedCount}/${totalQuartos}`, 
-          sub: `${occupancyPercent}%`,
+          sub: `${occupancyPercent}% ocupado`,
           icon: Users, 
           color: 'text-amber-400',
           iconBg: 'bg-amber-500/10 border-amber-500/20'
@@ -118,13 +133,14 @@ export default function Dashboard() {
         { 
           name: 'Quartos Livres', 
           value: freeCount, 
-          sub: `${freePercent}%`,
+          sub: `${freePercent}% livre`,
           icon: BedDouble, 
           color: 'text-purple-400',
           iconBg: 'bg-purple-500/10 border-purple-500/20'
         },
       ])
       setReservasAtivas(rAtivas || [])
+      setRecentActivities(activities)
 
     } catch (error) {
       console.error('Erro ao carregar dashboard:', error)
@@ -132,6 +148,8 @@ export default function Dashboard() {
       setLoading(false)
     }
   }
+
+  const [recentActivities, setRecentActivities] = useState<any[]>([])
 
   if (loading && stats.length === 0) {
     return (
@@ -316,11 +334,7 @@ export default function Dashboard() {
           <div className="bg-white dark:bg-[#1a1d27] rounded-2xl p-6 border border-zinc-200 dark:border-[#2a2d3a]">
             <h3 className="text-base font-bold text-zinc-900 dark:text-white mb-4">Atividade</h3>
             <div className="space-y-4">
-              {[
-                { text: 'Check-in realizado: Quarto 10', time: 'Há 5 min', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-                { text: 'Nova reserva: Maria Silva', time: 'Há 10 min', icon: PlusCircle, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-                { text: 'Pagamento recebido: R$ 450', time: 'Há 1 hora', icon: Wallet, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-              ].map((item, i) => (
+              {recentActivities.length > 0 ? recentActivities.map((item, i) => (
                 <div key={i} className="flex gap-3 items-start">
                   <div className={cn("p-2 rounded-lg", item.bg)}>
                     <item.icon className={cn("h-4 w-4", item.color)} />
@@ -330,7 +344,11 @@ export default function Dashboard() {
                     <p className="text-[10px] text-zinc-400 mt-0.5 uppercase font-semibold tracking-wider">{item.time}</p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="py-4 text-center">
+                  <p className="text-xs text-zinc-500 italic">Sem atividades recentes</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

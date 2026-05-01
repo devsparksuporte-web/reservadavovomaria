@@ -118,34 +118,41 @@ export default function QuartosPage() {
         ))}
       </div>
 
-      {/* Promo Card & Stats from Mockup */}
+      {/* Promo Card & Stats with Dynamic Data */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
         <div className="relative overflow-hidden rounded-2xl bg-[#1a1d27] border border-[#2a2d3a] p-6 flex flex-col justify-between min-h-[160px]">
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a1d27] via-transparent to-[#1a1d27]/50 z-10" />
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay" />
           
           <div className="relative z-20 flex flex-col gap-2">
-            <h3 className="text-white font-medium text-sm">Suites Premium</h3>
+            <h3 className="text-white font-medium text-sm">Status das Suítes</h3>
             <p className="text-zinc-400 text-xs max-w-[200px] leading-relaxed">
-              4 de 6 unidades ocupadas. Alta demanda para o próximo final de semana.
+              {quartos.filter(q => q.status !== 'Disponível').length} de {quartos.length} unidades ocupadas ou reservadas.
             </p>
           </div>
           
           <button className="relative z-20 mt-4 bg-emerald-400 hover:bg-emerald-500 text-[#0f1117] text-xs font-bold py-2.5 px-4 rounded-xl w-fit transition-colors">
-            Ver Relatórios
+            Ver Detalhes
           </button>
         </div>
 
         <div className="rounded-2xl bg-[#1a1d27] border border-[#2a2d3a] p-6 flex flex-col justify-center">
           <p className="text-xs text-white font-medium mb-3">Taxa de Ocupação</p>
           <div className="flex items-baseline gap-2 mb-4">
-            <h2 className="text-4xl font-light text-emerald-400 tracking-tighter">78%</h2>
+            <h2 className="text-4xl font-light text-emerald-400 tracking-tighter">
+              {quartos.length > 0 
+                ? Math.round((quartos.filter(q => q.status === 'Ocupado').length / quartos.length) * 100)
+                : 0}%
+            </h2>
             <span className="text-emerald-400 text-xs font-bold flex items-center gap-0.5">
-              <TrendingUp className="w-3 h-3" /> +12%
+              <TrendingUp className="w-3 h-3" /> Atualizado
             </span>
           </div>
           <div className="w-full bg-[#0f1117] rounded-full h-1.5 overflow-hidden">
-            <div className="bg-emerald-400 h-1.5 rounded-full" style={{ width: '78%' }}></div>
+            <div 
+              className="bg-emerald-400 h-1.5 rounded-full transition-all duration-500" 
+              style={{ width: `${quartos.length > 0 ? (quartos.filter(q => q.status === 'Ocupado').length / quartos.length) * 100 : 0}%` }}
+            ></div>
           </div>
         </div>
       </div>

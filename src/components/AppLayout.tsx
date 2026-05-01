@@ -44,10 +44,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' && !isLoginPage) {
         router.push('/login');
-        router.refresh();
       } else if (event === 'SIGNED_IN' && isLoginPage) {
         router.push('/');
-        router.refresh();
       }
     });
 
