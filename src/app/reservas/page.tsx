@@ -7,12 +7,14 @@ import { Trash2, Plus, Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useRole } from "@/hooks/useRole"
 
 export default function ReservasPage() {
   const router = useRouter()
   const [reservas, setReservas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
+  const { isAdmin } = useRole()
 
   const fetchReservas = async () => {
     setLoading(true)
@@ -140,12 +142,15 @@ export default function ReservasPage() {
                 </td>
                 <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium space-x-3">
                   <ReservaModal reserva={reserva} onRefresh={fetchReservas} />
-                  <button 
-                    onClick={() => handleDelete(reserva.id)}
-                    className="text-zinc-500 hover:text-red-400 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  {isAdmin && (
+                    <button 
+                      onClick={() => handleDelete(reserva.id)}
+                      className="text-zinc-500 hover:text-red-400 transition-colors"
+                      title="Excluir reserva"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

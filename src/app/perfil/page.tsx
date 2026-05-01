@@ -14,6 +14,7 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,6 +23,15 @@ export default function ProfilePage() {
         setUser(session.user);
         setFullName(session.user.user_metadata?.full_name || '');
         setEmail(session.user.email || '');
+
+        // Buscar dados do perfil (role)
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profileData) setProfile(profileData);
       }
       setLoading(false);
     };
@@ -153,7 +163,14 @@ export default function ProfilePage() {
         <div>
           <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1">Nível de Acesso</p>
           <div className="flex items-center gap-2">
-            <span className="bg-purple-500/10 text-purple-400 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Administrador Full</span>
+            <span className={cn(
+              "text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider",
+              profile?.role === 'admin' 
+                ? "bg-purple-500/10 text-purple-400 border border-purple-500/20" 
+                : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+            )}>
+              {profile?.role === 'admin' ? 'Administrador' : 'Equipe (Staff)'}
+            </span>
           </div>
         </div>
         <div>

@@ -4,11 +4,13 @@ import { supabase } from "@/lib/supabase"
 import { Search, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { HospedeModal } from "@/components/HospedeModal"
+import { useRole } from "@/hooks/useRole"
 
 export default function HospedesPage() {
   const [hospedes, setHospedes] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true)
+  const { isAdmin } = useRole()
 
   const fetchHospedes = async () => {
     setLoading(true)
@@ -102,12 +104,15 @@ export default function HospedesPage() {
                 </td>
                 <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium space-x-3">
                   <HospedeModal hospede={hospede} onRefresh={fetchHospedes} />
-                  <button 
-                    onClick={() => handleDelete(hospede.id)}
-                    className="text-zinc-500 hover:text-red-400 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  {isAdmin && (
+                    <button 
+                      onClick={() => handleDelete(hospede.id)}
+                      className="text-zinc-500 hover:text-red-400 transition-colors"
+                      title="Excluir hóspede"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

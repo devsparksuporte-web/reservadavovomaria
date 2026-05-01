@@ -4,11 +4,13 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import { ArrowUpRight, ArrowDownRight, CircleDollarSign, CheckCircle, Trash2, Calendar, User } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useRole } from "@/hooks/useRole"
 
 export default function FinanceiroPage() {
   const [pagamentos, setPagamentos] = useState<any[]>([])
   const [stats, setStats] = useState({ totalRecebido: 0, totalPendente: 0 })
   const [loading, setLoading] = useState(true)
+  const { isAdmin } = useRole()
 
   const fetchData = async () => {
     setLoading(true)
@@ -181,13 +183,15 @@ export default function FinanceiroPage() {
                           <CheckCircle className="h-5 w-5" />
                         </button>
                       )}
-                      <button
-                        onClick={() => handleDeletePayment(pagamento.id)}
-                        className="text-zinc-500 hover:text-red-400 transition-colors p-1"
-                        title="Excluir Registro"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDeletePayment(pagamento.id)}
+                          className="text-zinc-500 hover:text-red-400 transition-colors p-1"
+                          title="Excluir Registro"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

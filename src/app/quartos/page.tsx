@@ -9,11 +9,13 @@ import { Skeleton } from "@/components/Skeleton"
 import { Tooltip } from "@/components/Tooltip"
 import { format } from "date-fns"
 import { toast } from "sonner"
+import { useRole } from "@/hooks/useRole"
 
 export default function QuartosPage() {
   const [quartos, setQuartos] = useState<any[]>([])
   const [reservasAtivas, setReservasAtivas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const { isAdmin } = useRole()
 
   const fetchQuartos = async () => {
     try {
@@ -156,7 +158,18 @@ export default function QuartosPage() {
                   <span className="font-bold text-white text-base">
                     {quarto.numero}
                   </span>
-                  {getStatusIcon(quarto.status)}
+                  <div className="flex items-center gap-2">
+                    {isAdmin && (
+                      <button 
+                        onClick={() => handleDelete(quarto.id)}
+                        className="p-1 text-zinc-500 hover:text-red-400 transition-colors rounded-md"
+                        title="Excluir Quarto"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                    {getStatusIcon(quarto.status)}
+                  </div>
                 </div>
                 
                 <div className="mt-4 flex flex-col gap-1">
