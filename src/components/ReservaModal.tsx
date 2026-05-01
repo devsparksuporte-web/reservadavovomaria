@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { toast } from "sonner"
+import { maskCPF, maskPhone } from "@/lib/masks"
 
 const reservaSchema = z.object({
   nomeHospede: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
@@ -359,6 +360,10 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
     )
   }
 
+  // Custom handlers for masked inputs
+  const { onChange: onPhoneChange, ...phoneRegister } = register("telefone")
+  const { onChange: onCPFChange, ...cpfRegister } = register("cpf")
+
   return (
     <>
       <div onClick={() => setIsOpen(true)}>
@@ -441,7 +446,11 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                   <div>
                     <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">Telefone</label>
                     <input 
-                      {...register("telefone")}
+                      {...phoneRegister}
+                      onChange={(e) => {
+                        e.target.value = maskPhone(e.target.value)
+                        onPhoneChange(e)
+                      }}
                       className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                       placeholder="(11) 99999-9999" 
                     />
@@ -449,7 +458,11 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                   <div>
                     <label className="block text-[11px] font-medium text-[#707070] uppercase tracking-wider mb-1">CPF</label>
                     <input 
-                      {...register("cpf")}
+                      {...cpfRegister}
+                      onChange={(e) => {
+                        e.target.value = maskCPF(e.target.value)
+                        onCPFChange(e)
+                      }}
                       className="block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                       placeholder="000.000.000-00" 
                     />

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { X, Save, User, Phone, CreditCard, Plus, Pencil } from "lucide-react"
+import { maskCPF, maskPhone } from "@/lib/masks"
 
 interface HospedeModalProps {
   hospede?: any
@@ -76,6 +77,7 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
       <button
         onClick={() => setIsOpen(true)}
         className={hospede 
+          ? "text-[#707070] hover:text-[#3ecf8e] transition-colors"
           : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] transition-colors"
         }
       >
@@ -118,7 +120,7 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
                   <input
                     type="text"
                     value={telefone}
-                    onChange={(e) => setTelefone(e.target.value)}
+                    onChange={(e) => setTelefone(maskPhone(e.target.value))}
                     className="mt-1.5 block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                     placeholder="(00) 00000-0000"
                   />
@@ -131,7 +133,7 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
                   <input
                     type="text"
                     value={cpf}
-                    onChange={(e) => setCpf(e.target.value)}
+                    onChange={(e) => setCpf(maskCPF(e.target.value))}
                     className="mt-1.5 block w-full rounded-md border border-[#2e2e2e] bg-[#232323] px-3 py-2.5 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 transition-all"
                     placeholder="000.000.000-00"
                   />
