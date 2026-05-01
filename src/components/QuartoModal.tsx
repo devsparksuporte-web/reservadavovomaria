@@ -59,7 +59,11 @@ export function QuartoModal({ quarto, onRefresh }: QuartoModalProps) {
     }
 
     if (error) {
-      alert("Erro ao salvar quarto: " + error.message)
+      if (error.code === '42501') {
+        alert("Erro de RLS: Você não tem permissão para gerenciar quartos. Apenas administradores podem fazer isso.")
+      } else {
+        alert("Erro ao salvar quarto: " + error.message)
+      }
       setIsSubmitting(false)
       return
     }

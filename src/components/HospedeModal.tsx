@@ -50,13 +50,27 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
           .update(payload)
           .eq('id', hospede.id)
         
-        if (error) throw error
+        if (error) {
+          if (error.code === '42501') throw new Error("Erro de RLS: Sem permissão para atualizar hóspede.")
+          throw error
+        }
       } else {
+        // Tentar verificar se já existe por CPF antes de inserir
+        if (payload.cpf) {
+          const { data: existing } = await supabase.from('hospedes').select('id').eq('cpf', payload.cpf).maybeSingle()
+          if (existing) {
+            throw new Error("Já existe um hóspede cadastrado com este CPF.")
+          }
+        }
+
         const { error } = await supabase
           .from('hospedes')
           .insert([payload])
         
-        if (error) throw error
+        if (error) {
+          if (error.code === '42501') throw new Error("Erro de RLS: Sem permissão para criar hóspede.")
+          throw error
+        }
       }
 
       setIsOpen(false)

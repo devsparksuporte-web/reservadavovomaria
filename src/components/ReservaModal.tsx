@@ -137,41 +137,54 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
         return
       }
 
-      // 1. Criar ou buscar hóspede
+      // 1. Lógica de Hóspede (Tentar encontrar ou criar)
       let hospedeId = reserva?.hospede_id || null
-      
+
       if (!reserva) {
-        let existingHospedes = null;
+        let existingHospedeId = null;
         
+        // Tentar buscar por CPF primeiro
         if (data.cpf) {
-          const { data: cpfData } = await supabase.from('hospedes').select('id').eq('cpf', data.cpf).limit(1)
-          existingHospedes = cpfData
-        } else if (data.telefone) {
-          const { data: telData } = await supabase.from('hospedes').select('id').eq('telefone', data.telefone).limit(1)
-          existingHospedes = telData
-        } else {
-          const { data: nomeData } = await supabase.from('hospedes').select('id').eq('nome', data.nomeHospede).limit(1)
-          existingHospedes = nomeData
+          const { data: cpfData } = await supabase.from('hospedes').select('id').eq('cpf', data.cpf).maybeSingle()
+          if (cpfData) existingHospedeId = cpfData.id
         }
 
-        if (existingHospedes && existingHospedes.length > 0) {
-          hospedeId = existingHospedes[0].id
-          await supabase.from('hospedes').update({ 
-            nome: data.nomeHospede, 
-            telefone: data.telefone, 
-            cpf: data.cpf || null 
-          }).eq('id', hospedeId)
+        // Se não achou por CPF, tenta por telefone (apenas se telefone foi informado)
+        if (!existingHospedeId && data.telefone) {
+          const { data: telData } = await supabase.from('hospedes').select('id').eq('telefone', data.telefone).maybeSingle()
+          if (telData) existingHospedeId = telData.id
+        }
+
+        // Se ainda não achou, tenta por nome (último recurso)
+        if (!existingHospedeId) {
+          const { data: nomeData } = await supabase.from('hospedes').select('id').eq('nome', data.nomeHospede).maybeSingle()
+          if (nomeData) existingHospedeId = nomeData.id
+        }
+
+        const hospedePayload = {
+          nome: data.nomeHospede,
+          telefone: data.telefone,
+          cpf: data.cpf || null
+        }
+
+        if (existingHospedeId) {
+          hospedeId = existingHospedeId
+          await supabase.from('hospedes').update(hospedePayload).eq('id', hospedeId)
         } else {
           const { data: newHospede, error: hospedeError } = await supabase
             .from('hospedes')
-            .insert([{ nome: data.nomeHospede, telefone: data.telefone, cpf: data.cpf || null }])
+            .insert([hospedePayload])
             .select()
+            .single()
           
-          if (hospedeError) throw hospedeError
-          hospedeId = newHospede[0].id
+          if (hospedeError) {
+            if (hospedeError.code === '42501') throw new Error("Erro de RLS: Sem permissão para criar hóspede.")
+            throw hospedeError
+          }
+          hospedeId = newHospede.id
         }
       } else {
-        // Atualizar hóspede se necessário
+        // Atualizar hóspede se estiver editando
         await supabase.from('hospedes').update({ 
           telefone: data.telefone, 
           cpf: data.cpf || null 
