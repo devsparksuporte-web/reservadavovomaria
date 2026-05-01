@@ -73,31 +73,31 @@ export default function ProfilePage() {
       {/* Top Profile Header */}
       <div className="flex items-center gap-6">
         <div className="relative">
-          <div className="w-24 h-24 rounded-2xl bg-[#151821] border border-[#2a2d3a] overflow-hidden flex items-center justify-center">
+          <div className="w-24 h-24 rounded-lg bg-[#232323] border border-[#2e2e2e] overflow-hidden flex items-center justify-center">
              <UserCircle className="w-16 h-16 text-zinc-600" />
           </div>
-          <div className="absolute -bottom-2 -right-2 bg-emerald-400 text-[#0f1117] p-1.5 rounded-lg border border-[#0a0c10]">
+          <div className="absolute -bottom-2 -right-2 bg-[#3ecf8e] text-[#111111] p-1.5 rounded-md border border-[#171717]">
             <CheckCircle2 className="w-4 h-4" />
           </div>
         </div>
         
         <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold text-emerald-400 tracking-[0.2em] uppercase">Perfil do Usuário</span>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{fullName || 'Administrador'}</h2>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs mt-1">
-            <Mail className="w-3 h-3 text-emerald-500" />
+          <span className="text-[10px] font-bold text-[#3ecf8e] tracking-[0.2em] uppercase">Perfil do Usuário</span>
+          <h2 className="text-xl font-semibold text-[#ededed]">{fullName || 'Administrador'}</h2>
+          <div className="flex items-center gap-1.5 text-[#707070] text-[11px] mt-1">
+            <Mail className="w-3 h-3 text-[#3ecf8e]" />
             {email}
           </div>
         </div>
       </div>
 
       {/* Profile Form */}
-      <div className="bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] rounded-2xl p-6">
+      <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg p-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-[#0a0c10] p-2 rounded-lg text-emerald-400">
+          <div className="bg-[#232323] p-2 rounded-md text-[#3ecf8e]">
             <PenSquare className="w-4 h-4" />
           </div>
-          <h3 className="text-zinc-900 dark:text-white font-bold text-sm">Editar Cadastro</h3>
+          <h3 className="text-[#ededed] font-semibold text-[13px]">Editar Cadastro</h3>
         </div>
 
         <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -107,7 +107,7 @@ export default function ProfilePage() {
               type="text" 
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full bg-zinc-50 dark:bg-[#0a0c10] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 outline-none transition-all"
+              className="w-full bg-[#232323] border border-[#2e2e2e] rounded-md px-4 py-3 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 outline-none transition-all"
               placeholder="Seu nome"
             />
           </div>
@@ -118,7 +118,7 @@ export default function ProfilePage() {
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-zinc-50 dark:bg-[#0a0c10] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 outline-none transition-all"
+              className="w-full bg-[#232323] border border-[#2e2e2e] rounded-md px-4 py-3 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 outline-none transition-all"
               placeholder="seu@email.com"
             />
           </div>
@@ -129,7 +129,7 @@ export default function ProfilePage() {
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-zinc-50 dark:bg-[#0a0c10] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 outline-none transition-all"
+              className="w-full bg-[#232323] border border-[#2e2e2e] rounded-md px-4 py-3 text-[13px] text-[#ededed] focus:border-[#3ecf8e]/40 outline-none transition-all"
               placeholder="••••••••"
             />
             <p className="text-[10px] text-zinc-600 mt-1.5 ml-1 italic">Deixe em branco para manter a senha atual.</p>
@@ -139,7 +139,7 @@ export default function ProfilePage() {
             <button 
               type="submit"
               disabled={saving}
-              className="w-full bg-emerald-400 hover:bg-emerald-500 disabled:opacity-50 text-[#0f1117] py-3.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98]"
+              className="w-full bg-[#3ecf8e] hover:bg-[#24b47e] disabled:opacity-50 text-[#111111] py-3.5 rounded-md text-[11px] font-bold transition-all active:scale-[0.98]"
             >
               {saving ? 'SALVANDO ALTERAÇÕES...' : 'ATUALIZAR PERFIL'}
             </button>
@@ -148,12 +148,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Admin Info Card */}
-      <div className="bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] rounded-2xl p-5 space-y-4">
+      <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg p-5 space-y-4">
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-[#0a0c10] p-2 rounded-lg text-purple-400">
+          <div className="bg-[#232323] p-2 rounded-md text-purple-400">
             <FileText className="w-4 h-4" />
           </div>
-          <h3 className="text-zinc-900 dark:text-white font-bold text-sm">Informações do Sistema</h3>
+          <h3 className="text-[#ededed] font-semibold text-[13px]">Informações do Sistema</h3>
         </div>
 
         <div>
@@ -175,7 +175,7 @@ export default function ProfilePage() {
         </div>
         <div>
           <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1">Último Acesso</p>
-          <p className="text-zinc-700 dark:text-zinc-300 text-sm">
+          <p className="text-[#ededed] text-[13px]">
             {user?.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString('pt-BR') : 'Não disponível'}
           </p>
         </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { supabase } from "@/lib/supabase"
-import { CheckCircle2, Calendar, User, AlertTriangle, Trash2, Settings, TrendingUp, BedDouble } from "lucide-react"
+import { CheckCircle2, Calendar, User, AlertTriangle, Trash2, TrendingUp, BedDouble } from "lucide-react"
 import { QuartoModal } from "@/components/QuartoModal"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
@@ -77,7 +77,7 @@ export default function QuartosPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Disponível': return <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+      case 'Disponível': return <CheckCircle2 className="h-5 w-5 text-[#3ecf8e]" />
       case 'Ocupado': return <User className="h-5 w-5 text-rose-400" />
       case 'Reservado': return <Calendar className="h-5 w-5 text-purple-400" />
       default: return <AlertTriangle className="h-5 w-5 text-amber-400" />
@@ -86,7 +86,7 @@ export default function QuartosPage() {
 
   const getStatusColorClass = (status: string) => {
     switch (status) {
-      case 'Disponível': return 'text-emerald-400'
+      case 'Disponível': return 'text-[#3ecf8e]'
       case 'Ocupado': return 'text-rose-400'
       case 'Reservado': return 'text-purple-400'
       default: return 'text-amber-400'
@@ -95,36 +95,36 @@ export default function QuartosPage() {
 
   const getCardBorder = (status: string) => {
     switch (status) {
-      case 'Disponível': return 'border-[#2a2d3a] hover:border-emerald-500/30'
-      case 'Ocupado': return 'border-l-2 border-l-rose-400 border-t-[#2a2d3a] border-r-[#2a2d3a] border-b-[#2a2d3a]'
-      case 'Reservado': return 'border-[#2a2d3a] hover:border-purple-500/30'
-      default: return 'border-[#2a2d3a]'
+      case 'Disponível': return 'border-[#2e2e2e] hover:border-[#3ecf8e]/30'
+      case 'Ocupado': return 'border-l-2 border-l-rose-400 border-t-[#2e2e2e] border-r-[#2e2e2e] border-b-[#2e2e2e]'
+      case 'Reservado': return 'border-[#2e2e2e] hover:border-purple-500/30'
+      default: return 'border-[#2e2e2e]'
     }
   }
 
   return (
     <div className="space-y-6 animate-fade-in-up pb-10">
       <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">
+        <h2 className="text-xl font-semibold text-[#ededed] tracking-tight">
           Mapa de Quartos
         </h2>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        <p className="text-[13px] text-[#707070]">
           Status em tempo real da ocupação do estabelecimento.
         </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 bg-[#1a1d27] border border-[#2a2d3a] px-3 py-1.5 rounded-full">
-          <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-          <span className="text-xs font-medium text-white">Livre</span>
+        <div className="flex items-center gap-2 bg-[#1c1c1c] border border-[#2e2e2e] px-3 py-1.5 rounded-full">
+          <div className="w-2 h-2 rounded-full bg-[#3ecf8e]"></div>
+          <span className="text-[11px] font-medium text-[#ededed]">Livre</span>
         </div>
-        <div className="flex items-center gap-2 bg-[#1a1d27] border border-[#2a2d3a] px-3 py-1.5 rounded-full">
+        <div className="flex items-center gap-2 bg-[#1c1c1c] border border-[#2e2e2e] px-3 py-1.5 rounded-full">
           <div className="w-2 h-2 rounded-full bg-purple-400"></div>
-          <span className="text-xs font-medium text-white">Reservado</span>
+          <span className="text-[11px] font-medium text-[#ededed]">Reservado</span>
         </div>
-        <div className="flex items-center gap-2 bg-[#1a1d27] border border-[#2a2d3a] px-3 py-1.5 rounded-full">
+        <div className="flex items-center gap-2 bg-[#1c1c1c] border border-[#2e2e2e] px-3 py-1.5 rounded-full">
           <div className="w-2 h-2 rounded-full bg-rose-400"></div>
-          <span className="text-xs font-medium text-white">Ocupado</span>
+          <span className="text-[11px] font-medium text-[#ededed]">Ocupado</span>
         </div>
         
         <div className="ml-auto">
@@ -135,7 +135,7 @@ export default function QuartosPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {loading && quartos.length === 0 ? (
           Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex flex-col justify-between p-4 rounded-2xl bg-[#1a1d27] border border-[#2a2d3a] min-h-[120px]">
+            <div key={i} className="flex flex-col justify-between p-4 rounded-lg bg-[#1c1c1c] border border-[#2e2e2e] min-h-[120px]">
               <div className="flex items-start justify-between">
                 <Skeleton className="h-5 w-8" />
                 <Skeleton className="h-5 w-5 rounded-full" />
@@ -152,17 +152,17 @@ export default function QuartosPage() {
             const card = (
               <div
                 key={quarto.id}
-                className={cn("flex flex-col justify-between p-4 rounded-2xl bg-[#1a1d27] border transition-all duration-200 min-h-[120px]", getCardBorder(quarto.status))}
+                className={cn("flex flex-col justify-between p-4 rounded-lg bg-[#1c1c1c] border transition-all duration-200 min-h-[120px]", getCardBorder(quarto.status))}
               >
                 <div className="flex items-start justify-between">
-                  <span className="font-bold text-white text-base">
+                  <span className="font-semibold text-[#ededed] text-base">
                     {quarto.numero}
                   </span>
                   <div className="flex items-center gap-2">
                     {isAdmin && (
                       <button 
                         onClick={() => handleDelete(quarto.id)}
-                        className="p-1 text-zinc-500 hover:text-red-400 transition-colors rounded-md"
+                        className="p-1 text-[#555555] hover:text-red-400 transition-colors rounded-md"
                         title="Excluir Quarto"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -173,7 +173,7 @@ export default function QuartosPage() {
                 </div>
                 
                 <div className="mt-4 flex flex-col gap-1">
-                  <span className="text-xs text-zinc-400 font-medium truncate">{quarto.tipo}</span>
+                  <span className="text-[11px] text-[#707070] font-medium truncate">{quarto.tipo}</span>
                   <span className={cn("text-[10px] font-bold uppercase tracking-wider", getStatusColorClass(quarto.status))}>
                     {quarto.status === 'Disponível' ? 'LIVRE' : quarto.status}
                   </span>
@@ -182,7 +182,7 @@ export default function QuartosPage() {
                       {(reserva.status === 'Confirmado' || reserva.status === 'Reservado' || reserva.status === 'Pendente') && (
                         <button 
                           onClick={(e) => handleQuickStatusUpdate(reserva.id, 'Checked-in', e)}
-                          className="px-2 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-[8px] font-bold transition-colors"
+                          className="px-2 py-1 rounded bg-[#3ecf8e]/20 hover:bg-[#3ecf8e]/30 text-[#3ecf8e] text-[8px] font-bold transition-colors"
                         >
                           CHECK-IN
                         </button>
@@ -222,39 +222,39 @@ export default function QuartosPage() {
         )}
       </div>
 
-      {/* Promo Card & Stats with Dynamic Data */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-        <div className="relative overflow-hidden rounded-2xl bg-[#1a1d27] border border-[#2a2d3a] p-6 flex flex-col justify-between min-h-[160px]">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1d27] via-transparent to-[#1a1d27]/50 z-10" />
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay" />
+        <div className="relative overflow-hidden rounded-lg bg-[#1c1c1c] border border-[#2e2e2e] p-6 flex flex-col justify-between min-h-[160px]">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1c1c1c] via-transparent to-[#1c1c1c]/50 z-10" />
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay" />
           
           <div className="relative z-20 flex flex-col gap-2">
-            <h3 className="text-white font-medium text-sm">Status das Suítes</h3>
-            <p className="text-zinc-400 text-xs max-w-[200px] leading-relaxed">
+            <h3 className="text-[#ededed] font-medium text-[13px]">Status das Suítes</h3>
+            <p className="text-[#707070] text-[11px] max-w-[200px] leading-relaxed">
               {quartos.filter(q => q.status !== 'Disponível').length} de {quartos.length} unidades ocupadas ou reservadas.
             </p>
           </div>
           
-          <button className="relative z-20 mt-4 bg-emerald-400 hover:bg-emerald-500 text-[#0f1117] text-xs font-bold py-2.5 px-4 rounded-xl w-fit transition-colors">
+          <button className="relative z-20 mt-4 bg-[#3ecf8e] hover:bg-[#24b47e] text-[#111111] text-[11px] font-bold py-2.5 px-4 rounded-md w-fit transition-colors">
             Ver Detalhes
           </button>
         </div>
 
-        <div className="rounded-2xl bg-[#1a1d27] border border-[#2a2d3a] p-6 flex flex-col justify-center">
-          <p className="text-xs text-white font-medium mb-3">Taxa de Ocupação</p>
+        <div className="rounded-lg bg-[#1c1c1c] border border-[#2e2e2e] p-6 flex flex-col justify-center">
+          <p className="text-[11px] text-[#ededed] font-medium mb-3">Taxa de Ocupação</p>
           <div className="flex items-baseline gap-2 mb-4">
-            <h2 className="text-4xl font-light text-emerald-400 tracking-tighter">
+            <h2 className="text-4xl font-light text-[#3ecf8e] tracking-tighter">
               {quartos.length > 0 
                 ? Math.round((quartos.filter(q => q.status === 'Ocupado').length / quartos.length) * 100)
                 : 0}%
             </h2>
-            <span className="text-emerald-400 text-xs font-bold flex items-center gap-0.5">
+            <span className="text-[#3ecf8e] text-[11px] font-bold flex items-center gap-0.5">
               <TrendingUp className="w-3 h-3" /> Atualizado
             </span>
           </div>
-          <div className="w-full bg-[#0f1117] rounded-full h-1.5 overflow-hidden">
+          <div className="w-full bg-[#232323] rounded-full h-1.5 overflow-hidden">
             <div 
-              className="bg-emerald-400 h-1.5 rounded-full transition-all duration-500" 
+              className="bg-[#3ecf8e] h-1.5 rounded-full transition-all duration-500" 
               style={{ width: `${quartos.length > 0 ? (quartos.filter(q => q.status === 'Ocupado').length / quartos.length) * 100 : 0}%` }}
             ></div>
           </div>
@@ -262,14 +262,12 @@ export default function QuartosPage() {
       </div>
       
       {!loading && quartos.length === 0 && (
-        <div className="text-center py-16 bg-white dark:bg-[#1a1d27] rounded-2xl border border-dashed border-zinc-300 dark:border-[#2a2d3a]">
-          <BedDouble className="mx-auto h-10 w-10 text-zinc-400 mb-4" />
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Nenhum quarto encontrado</h3>
-          <p className="mt-1 text-sm text-zinc-500">Adicione um novo quarto utilizando o botão no topo da página.</p>
+        <div className="text-center py-16 bg-[#1c1c1c] rounded-lg border border-dashed border-[#2e2e2e]">
+          <BedDouble className="mx-auto h-10 w-10 text-[#555555] mb-4" />
+          <h3 className="text-[13px] font-semibold text-[#ededed]">Nenhum quarto encontrado</h3>
+          <p className="mt-1 text-[13px] text-[#707070]">Adicione um novo quarto utilizando o botão no topo da página.</p>
         </div>
       )}
-
-      {/* Loading state handled by skeletons above */}
     </div>
   )
 }

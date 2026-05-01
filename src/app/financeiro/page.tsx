@@ -102,44 +102,44 @@ export default function FinanceiroPage() {
   return (
     <div className="space-y-6 animate-fade-in-up">
       <div>
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Financeiro</h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
+        <h2 className="text-xl font-semibold text-[#ededed] tracking-tight">Financeiro</h2>
+        <p className="mt-1 text-[13px] text-[#707070]">
           Acompanhamento de receitas e pendências de pagamentos.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 stagger-children">
         {statCards.map((card) => (
-          <div key={card.name} className={cn("overflow-hidden rounded-2xl bg-white dark:bg-[#1a1d27] p-5 border border-zinc-200 dark:border-[#2a2d3a] border-t-4", card.accent)}>
+          <div key={card.name} className={cn("overflow-hidden rounded-lg bg-[#1c1c1c] p-5 border border-[#2e2e2e] border-t-4", card.accent)}>
             <div className="flex items-center gap-3">
               <div className={cn("p-2.5 rounded-xl border", card.iconBg)}>
                 <card.icon className={cn("h-5 w-5", card.color)} />
               </div>
-              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-500">{card.name}</p>
+              <p className="text-[13px] font-medium text-[#707070]">{card.name}</p>
             </div>
-            <p className="mt-3 text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">{card.value}</p>
+            <p className="mt-3 text-2xl font-bold text-[#ededed] tracking-tight">{card.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a]">
+      <div className="overflow-hidden rounded-lg bg-[#1c1c1c] border border-[#2e2e2e]">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-zinc-200 dark:divide-[#2a2d3a]">
-            <thead className="bg-zinc-50 dark:bg-[#151821]">
+          <table className="min-w-full divide-y divide-[#2e2e2e]">
+            <thead className="bg-[#232323]">
               <tr>
-                <th scope="col" className="py-3.5 pl-6 pr-3 text-left text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">
+                <th scope="col" className="py-3.5 pl-6 pr-3 text-left text-[11px] font-medium text-[#707070] uppercase tracking-wider">
                   <div className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5" /> Data</div>
                 </th>
-                <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">
+                <th scope="col" className="px-3 py-3.5 text-left text-[11px] font-medium text-[#707070] uppercase tracking-wider">
                   <div className="flex items-center gap-2"><User className="h-3.5 w-3.5" /> Hóspede</div>
                 </th>
-                <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Forma de Pgto</th>
-                <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-3 py-3.5 text-right text-xs font-semibold text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">Valor</th>
+                <th scope="col" className="px-3 py-3.5 text-left text-[11px] font-medium text-[#707070] uppercase tracking-wider">Forma de Pgto</th>
+                <th scope="col" className="px-3 py-3.5 text-left text-[11px] font-medium text-[#707070] uppercase tracking-wider">Status</th>
+                <th scope="col" className="px-3 py-3.5 text-right text-[11px] font-medium text-[#707070] uppercase tracking-wider">Valor</th>
                 <th scope="col" className="relative py-3.5 pl-3 pr-6"><span className="sr-only">Ações</span></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-[#2a2d3a]">
+            <tbody className="divide-y divide-[#2e2e2e]">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-sm text-zinc-500">
@@ -150,14 +150,14 @@ export default function FinanceiroPage() {
                   </td>
                 </tr>
               ) : pagamentos.map((pagamento: any) => (
-                <tr key={pagamento.id} className="hover:bg-zinc-50 dark:hover:bg-[#151821] transition-colors">
-                  <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm text-zinc-500 dark:text-zinc-400">
+                <tr key={pagamento.id} className="hover:bg-[#232323] transition-colors">
+                  <td className="whitespace-nowrap py-4 pl-6 pr-3 text-[13px] text-[#707070]">
                     {new Date(pagamento.data_pagamento).toLocaleDateString('pt-BR')}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-zinc-900 dark:text-white">
+                  <td className="whitespace-nowrap px-3 py-4 text-[13px] font-medium text-[#ededed]">
                     {pagamento.reservas?.hospedes?.nome || 'Hóspede Removido'}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400 capitalize">
+                  <td className="whitespace-nowrap px-3 py-4 text-[13px] text-[#707070] capitalize">
                     {pagamento.forma_pagamento}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm">
@@ -169,7 +169,7 @@ export default function FinanceiroPage() {
                       {pagamento.status}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm font-bold text-zinc-900 dark:text-white text-right">
+                  <td className="whitespace-nowrap px-3 py-4 text-[13px] font-bold text-[#ededed] text-right">
                     R$ {Number(pagamento.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </td>
                   <td className="whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium">
