@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { LayoutDashboard, CalendarDays, BedDouble, Users, Wallet, CheckSquare, UserCircle, Settings, LogOut, BarChart3 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { supabase } from "@/lib/supabase"
+import { logout } from "@/app/actions/auth"
 
 const navigation = [
   { name: "DASHBOARD", href: "/", icon: LayoutDashboard },
@@ -21,14 +21,7 @@ export function Sidebar() {
   const router = useRouter()
 
   const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut()
-      // Forçamos o reload da página inteira para limpar o cache de rotas do Next.js e da sessão
-      window.location.href = '/login'
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error)
-      window.location.href = '/login'
-    }
+    await logout()
   }
 
   return (

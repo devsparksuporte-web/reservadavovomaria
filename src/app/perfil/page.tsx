@@ -83,7 +83,7 @@ export default function ProfilePage() {
         
         <div className="flex flex-col gap-1">
           <span className="text-[10px] font-bold text-emerald-400 tracking-[0.2em] uppercase">Perfil do Usuário</span>
-          <h2 className="text-xl font-bold text-white">{fullName || 'Administrador'}</h2>
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{fullName || 'Administrador'}</h2>
           <div className="flex items-center gap-1.5 text-zinc-400 text-xs mt-1">
             <Mail className="w-3 h-3 text-emerald-500" />
             {email}
@@ -92,12 +92,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Form */}
-      <div className="bg-[#1a1d27] border border-[#2a2d3a] rounded-2xl p-6">
+      <div className="bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] rounded-2xl p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="bg-[#0a0c10] p-2 rounded-lg text-emerald-400">
             <PenSquare className="w-4 h-4" />
           </div>
-          <h3 className="text-white font-bold text-sm">Editar Cadastro</h3>
+          <h3 className="text-zinc-900 dark:text-white font-bold text-sm">Editar Cadastro</h3>
         </div>
 
         <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -107,7 +107,7 @@ export default function ProfilePage() {
               type="text" 
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full bg-[#0a0c10] border border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
+              className="w-full bg-zinc-50 dark:bg-[#0a0c10] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 outline-none transition-all"
               placeholder="Seu nome"
             />
           </div>
@@ -118,7 +118,7 @@ export default function ProfilePage() {
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#0a0c10] border border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
+              className="w-full bg-zinc-50 dark:bg-[#0a0c10] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 outline-none transition-all"
               placeholder="seu@email.com"
             />
           </div>
@@ -129,7 +129,7 @@ export default function ProfilePage() {
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#0a0c10] border border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
+              className="w-full bg-zinc-50 dark:bg-[#0a0c10] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:border-emerald-500 outline-none transition-all"
               placeholder="••••••••"
             />
             <p className="text-[10px] text-zinc-600 mt-1.5 ml-1 italic">Deixe em branco para manter a senha atual.</p>
@@ -148,12 +148,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Admin Info Card */}
-      <div className="bg-[#1a1d27] border border-[#2a2d3a] rounded-2xl p-5 space-y-4">
+      <div className="bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] rounded-2xl p-5 space-y-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="bg-[#0a0c10] p-2 rounded-lg text-purple-400">
             <FileText className="w-4 h-4" />
           </div>
-          <h3 className="text-white font-bold text-sm">Informações do Sistema</h3>
+          <h3 className="text-zinc-900 dark:text-white font-bold text-sm">Informações do Sistema</h3>
         </div>
 
         <div>
@@ -175,7 +175,7 @@ export default function ProfilePage() {
         </div>
         <div>
           <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-1">Último Acesso</p>
-          <p className="text-zinc-300 text-sm">
+          <p className="text-zinc-700 dark:text-zinc-300 text-sm">
             {user?.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString('pt-BR') : 'Não disponível'}
           </p>
         </div>

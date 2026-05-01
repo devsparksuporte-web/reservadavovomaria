@@ -77,10 +77,10 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between bg-[#0f1117]/80 backdrop-blur-xl px-6 border-b border-[#1e2130]">
+    <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between bg-white/80 dark:bg-[#0f1117]/80 backdrop-blur-xl px-6 border-b border-zinc-200 dark:border-[#1e2130]">
       {/* Search */}
       <div className="flex items-center gap-4 relative" ref={searchRef}>
-        <div className="hidden md:flex items-center bg-[#1a1d27] px-4 py-2.5 rounded-xl border border-[#2a2d3a] group focus-within:border-emerald-500/50 transition-all w-80">
+        <div className="hidden md:flex items-center bg-zinc-50 dark:bg-[#1a1d27] px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-[#2a2d3a] group focus-within:border-emerald-500/50 transition-all w-80">
           <Search className="h-4 w-4 text-zinc-500 group-focus-within:text-emerald-500 transition-colors" />
           <input
             type="text"
@@ -88,7 +88,7 @@ export function Header() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => searchQuery.length >= 2 && setShowResults(true)}
-            className="bg-transparent border-none outline-none text-sm ml-3 w-full text-zinc-200 placeholder:text-zinc-600 placeholder:font-medium placeholder:text-xs placeholder:tracking-widest"
+            className="bg-transparent border-none outline-none text-sm ml-3 w-full text-zinc-900 dark:text-zinc-200 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 placeholder:font-medium placeholder:text-xs placeholder:tracking-widest"
           />
           {isSearching && (
             <div className="h-3 w-3 border border-emerald-500 border-t-transparent rounded-full animate-spin ml-2"></div>
@@ -160,7 +160,7 @@ export function Header() {
       {/* Right Actions */}
       <div className="flex items-center gap-3">
         {/* Notifications */}
-        <button className="relative p-2.5 bg-[#1a1d27] border border-[#2a2d3a] rounded-xl text-zinc-400 hover:text-white hover:border-zinc-600 transition-all active:scale-95">
+        <button className="relative p-2.5 bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-zinc-600 transition-all active:scale-95">
           <Bell className="h-4 w-4" />
           <span className="absolute top-2 right-2 h-2 w-2 bg-emerald-500 rounded-full animate-pulse"></span>
         </button>
@@ -169,7 +169,7 @@ export function Header() {
         {mounted && (
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2.5 bg-[#1a1d27] border border-[#2a2d3a] rounded-xl text-zinc-400 hover:text-white hover:border-zinc-600 transition-all active:scale-95"
+            className="p-2.5 bg-white dark:bg-[#1a1d27] border border-zinc-200 dark:border-[#2a2d3a] rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-zinc-600 transition-all active:scale-95"
           >
             {theme === "dark" ? (
               <Sun className="h-4 w-4" />
@@ -180,7 +180,7 @@ export function Header() {
         )}
 
         {/* Divider */}
-        <div className="h-8 w-px bg-[#2a2d3a] mx-1"></div>
+        <div className="h-8 w-px bg-zinc-200 dark:bg-[#2a2d3a] mx-1"></div>
 
         {/* User */}
         <div className="flex items-center gap-3">
@@ -192,7 +192,7 @@ export function Header() {
             />
           </div>
           <div className="hidden sm:block text-right">
-            <p className="text-xs font-semibold text-zinc-200 leading-tight">
+            <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 leading-tight">
               {user?.user_metadata?.full_name || 'Administrator'}
             </p>
             <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Pousada Vovó Maria</p>

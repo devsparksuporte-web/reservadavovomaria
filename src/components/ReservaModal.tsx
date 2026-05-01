@@ -397,8 +397,8 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm overflow-hidden">
-          <div className="w-full max-w-lg flex flex-col rounded-2xl bg-white dark:bg-[#1a1d27] shadow-2xl max-h-[95vh] border border-zinc-200 dark:border-[#2a2d3a]">
+        <div className="fixed inset-0 z-50 flex bg-black/70 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-lg m-auto flex flex-col rounded-2xl bg-white dark:bg-[#1a1d27] shadow-2xl border border-zinc-200 dark:border-[#2a2d3a]">
             <div className="flex items-center justify-between border-b border-zinc-100 dark:border-[#2a2d3a] p-5 shrink-0 rounded-t-2xl">
               <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
                 {reserva ? "Editar Reserva" : "Nova Reserva"}
