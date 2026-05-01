@@ -81,6 +81,7 @@ export function QuartoModal({ quarto, onRefresh }: QuartoModalProps) {
       <button
         onClick={() => setIsOpen(true)}
         className={quarto 
+          ? "text-[#707070] hover:text-[#3ecf8e] transition-colors"
           : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] transition-colors"
         }
       >
