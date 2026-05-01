@@ -31,8 +31,8 @@
 
 @layer base {
   :root {
-    --background: #FAFAFA;
-    --foreground: #18181b;
+    --background: #171717;
+    --foreground: #ededed;
   }
 
   .dark {

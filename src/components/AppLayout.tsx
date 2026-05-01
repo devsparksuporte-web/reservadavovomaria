@@ -28,12 +28,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex flex-1 overflow-hidden w-full bg-zinc-50 dark:bg-[#171717] transition-colors">
+    <div className="flex flex-1 overflow-hidden w-full bg-[#171717] transition-colors">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden relative">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-6 scroll-smooth">
-          <div className="max-w-[1600px] mx-auto">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth custom-scrollbar">
+          <div className="w-full">
             {children}
           </div>
         </main>
