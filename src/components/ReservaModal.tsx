@@ -287,7 +287,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
   if (showReceipt && createdReserva) {
     return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 p-4 backdrop-blur-md">
         <div id="receipt-print-area" className="w-full max-w-md flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 max-h-[95vh] overflow-hidden border border-[#2e2e2e] print:rounded-none">
           <div className="bg-[#3ecf8e] shrink-0 p-6 text-center text-[#111111] print:bg-transparent print:text-black print:border-b print-border-black print:p-2">
             <CheckCircle2 className="mx-auto h-12 w-12 mb-2 print:hidden" />
@@ -397,7 +397,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex bg-black/60 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex bg-black/30 p-4 sm:p-6 backdrop-blur-md overflow-y-auto">
           <div className="w-full max-w-lg m-auto flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 border border-[#2e2e2e] animate-fade-in-up">
             <div className="flex items-center justify-between border-b border-[#2e2e2e] p-5 shrink-0">
               <h3 className="text-base font-semibold text-[#ededed]">
