@@ -209,7 +209,7 @@ export default function AgendaPage() {
 
         <div className="flex gap-4">
           <ReservaModal onRefresh={fetchData} initialData={{ data_checkin: format(selectedDate, "yyyy-MM-dd") }}>
-            <button className="flex-1 bg-[#3ecf8e] hover:bg-[#24b47e] text-[#111] font-bold text-[11px] py-3.5 rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-[#3ecf8e]/10">
+            <button className="flex-1 bg-[#3ecf8e] hover:bg-[#24b47e] text-[#111] font-bold text-[11px] py-3.5 rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
               <Plus className="w-4 h-4" /> NOVA RESERVA
             </button>
           </ReservaModal>
@@ -225,7 +225,7 @@ export default function AgendaPage() {
       {/* RIGHT: Stats & Events */}
       <div className="w-full lg:w-[320px] shrink-0 space-y-6">
         {/* Stats */}
-        <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg p-5 shadow-xl">
+        <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg p-5">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-[10px] font-bold text-[#555] uppercase tracking-[0.2em]">Resumo de Status</h3>
             <Filter className="w-3.5 h-3.5 text-[#555]" />
@@ -250,7 +250,7 @@ export default function AgendaPage() {
         </div>
 
         {/* Timeline Events */}
-        <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg p-5 shadow-xl min-h-[400px]">
+        <div className="bg-[#1c1c1c] border border-[#2e2e2e] rounded-lg p-5 min-h-[400px]">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-[13px] font-bold text-[#ededed]">Eventos do Dia</h3>
             <div className="flex items-center gap-1.5 px-2 py-1 bg-[#232323] rounded-md border border-[#2e2e2e]">

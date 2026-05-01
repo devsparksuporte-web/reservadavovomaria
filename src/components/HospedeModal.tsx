@@ -76,15 +76,14 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
       <button
         onClick={() => setIsOpen(true)}
         className={hospede 
-          ? "text-[#707070] hover:text-[#3ecf8e] transition-colors"
-          : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md shadow-[#3ecf8e]/15 hover:bg-[#24b47e] transition-colors"
+          : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] transition-colors"
         }
       >
         {hospede ? <Pencil className="h-4 w-4" /> : <><Plus className="mr-2 h-4 w-4" /> Novo Hóspede</>}
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex bg-black/30 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex bg-black/40 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
           <div className="w-full max-w-lg m-auto flex flex-col rounded-lg bg-[#1c1c1c] border border-[#2e2e2e] animate-fade-in-up">
             <div className="flex items-center justify-between border-b border-[#2e2e2e] p-5 shrink-0">
               <h3 className="text-base font-semibold text-[#ededed]">
@@ -150,7 +149,7 @@ export function HospedeModal({ hospede, onRefresh }: HospedeModalProps) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="inline-flex items-center rounded-md bg-[#3ecf8e] px-5 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] disabled:opacity-50 transition-colors shadow-md shadow-[#3ecf8e]/15"
+                  className="inline-flex items-center rounded-md bg-[#3ecf8e] px-5 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] disabled:opacity-50 transition-colors"
                 >
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-[#111111]/30 border-t-[#111111] rounded-full animate-spin mr-2"></div>

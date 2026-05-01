@@ -287,8 +287,8 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
 
   if (showReceipt && createdReserva) {
     return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 p-4 backdrop-blur-md">
-        <div id="receipt-print-area" className="w-full max-w-md flex flex-col rounded-lg bg-[#1c1c1c] shadow-2xl shadow-black/50 max-h-[95vh] overflow-hidden border border-[#2e2e2e] print:rounded-none">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 backdrop-blur-md">
+        <div id="receipt-print-area" className="w-full max-w-md flex flex-col rounded-lg bg-[#1c1c1c] max-h-[95vh] overflow-hidden border border-[#2e2e2e] print:rounded-none">
           <div className="bg-[#3ecf8e] shrink-0 p-6 text-center text-[#111111] print:bg-transparent print:text-black print:border-b print-border-black print:p-2">
             <CheckCircle2 className="mx-auto h-12 w-12 mb-2 print:hidden" />
             <h3 className="text-xl font-bold print-black print:text-lg">Reserva Confirmada!</h3>
@@ -386,7 +386,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
               }}
               className={reserva
                 ? "text-[#707070] hover:text-[#3ecf8e] transition-colors p-1"
-                : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md shadow-[#3ecf8e]/15 hover:bg-[#24b47e] transition-colors"
+                : "inline-flex items-center rounded-lg bg-[#3ecf8e] px-4 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] transition-colors"
               }
               title={reserva ? "Editar Reserva" : "Nova Reserva"}
             >
@@ -397,7 +397,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex bg-black/30 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex bg-black/40 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto">
           <div className="w-full max-w-lg m-auto flex flex-col rounded-lg bg-[#1c1c1c] border border-[#2e2e2e] animate-fade-in-up">
             <div className="flex items-center justify-between border-b border-[#2e2e2e] p-5 shrink-0">
               <h3 className="text-base font-semibold text-[#ededed]">
@@ -563,7 +563,7 @@ export function ReservaModal({ reserva, initialData, onRefresh, children }: Rese
                 <button 
                   type="submit" 
                   disabled={isSubmitting || quartos.length === 0}
-                  className="rounded-md bg-[#3ecf8e] px-5 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] disabled:opacity-50 transition-colors shadow-md shadow-[#3ecf8e]/15"
+                  className="rounded-md bg-[#3ecf8e] px-5 py-2.5 text-[13px] font-semibold text-[#111111] hover:bg-[#24b47e] disabled:opacity-50 transition-colors"
                 >
                   {isSubmitting ? "Processando..." : (reserva ? "Salvar Alterações" : "Confirmar Reserva")}
                 </button>

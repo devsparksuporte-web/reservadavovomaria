@@ -76,7 +76,7 @@ export default function HospedesPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg bg-[#1c1c1c] border border-[#2e2e2e]">
+      <div className="overflow-x-auto rounded-lg bg-[#1c1c1c] border border-[#2e2e2e]">
         <table className="min-w-full divide-y divide-[#2e2e2e]">
           <thead className="bg-[#232323]">
             <tr>
